@@ -1,0 +1,13 @@
+.square {
+    flex-grow: 1;
+    width: 29%;
+    padding: 2%;
+}
+
+.square .piece.active {
+    background-color: #999;
+}
+
+.square .piece.player2 {
+    background: #333;
+}

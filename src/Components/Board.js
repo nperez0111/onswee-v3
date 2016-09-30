@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import Square from './Square.js';
+import './Board.css';
 export default class Board extends Component {
     static propTypes = {
         board: PropTypes.arrayOf(PropTypes.number).isRequired,

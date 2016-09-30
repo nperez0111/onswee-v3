@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import PlayerPiece from './PlayerPiece.js';
 import GameUtils from './GameUtils.js';
+import './Square.css';
 
 export default class Square extends Component {
     static propTypes = {

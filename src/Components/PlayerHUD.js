@@ -10,10 +10,10 @@ export default class Square extends Component {
     render() {
         const { onEdit, playerNames, turn } = this.props;
         return (<div className='player-names'>{
-            this.displayNames(playerNames,turn,onEdit)
+            this.displayEditNames(playerNames,turn,onEdit)
         }</div>);
     }
-    displayNames(playerNames, turn, onEdit) {
+    displayEditNames(playerNames, turn, onEdit) {
         return playerNames.map((name, index) => {
             const classNamed = `name ${GameUtils.isPlayersTurn(index,turn)?'active':''}`;
             return (<input key={index} className={classNamed} value={name} onChange={onEdit(`player${index+1}`)} />)
