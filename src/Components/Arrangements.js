@@ -1,4 +1,6 @@
-export default class Arrangements {
+import Loggings from './Loggings.js';
+
+export default class Arrangements extends Loggings {
     static illegalMovements = [
         [2, 5, 6, 7, 8],
         [3, 5, 6, 7, 8],

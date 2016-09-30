@@ -18,22 +18,21 @@ export default class GameLogic extends GameUtils {
     }
     static canMoveInto(player, pos, board) {
 
-            if (!this.isEmptyPos(pos, board)) {
-                return false
-            }
-
-            //any position can move to center
-            if (pos === this.center) {
-                return true;
-            }
-
-            //check all possibles that can move into specified pos
-            return this.allPosMoveLocs[pos].some((loc) => {
-                return (this.hasPosIn(player, loc, board))
-            })
-
+        if (!this.isEmptyPos(pos, board)) {
+            return false
         }
-        //test me
+
+        //any position can move to center
+        if (pos === this.center) {
+            return true;
+        }
+
+        //check all possibles that can move into specified pos
+        return this.allPosMoveLocs[pos].some((loc) => {
+            return (this.hasPosIn(player, loc, board))
+        })
+
+    }
     static canMoveFromTo(player, board, fro, to) {
 
         //check if where we are moving is even empty
@@ -51,5 +50,20 @@ export default class GameLogic extends GameUtils {
             }
         }
         return false;
+    }
+    static changeBetween(prev, newy) {
+        let ret = [];
+
+        prev.forEach(function(cur, i) {
+            if (cur !== (newy || [])[i]) {
+                if (cur === null) {
+                    ret[1] = i;
+                }
+                if (cur !== null) {
+                    ret[0] = i;
+                }
+            }
+        });
+        return ret;
     }
 }

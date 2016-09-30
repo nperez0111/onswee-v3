@@ -21,3 +21,7 @@ it('knows whether a player can move from one position to another', () => {
     e(g.canMoveFromTo(2, b, 0, 2)).toBe(false)
     e(g.canMoveFromTo(1, b, 0, 3)).toBe(false)
 })
+it('knows the diff between two boards', () => {
+    const newone = [null, 1, 2, 1, 2, null, 2, 1, null]
+    e(g.changeBetween(b, newone)).toEqual([0, 1])
+})
