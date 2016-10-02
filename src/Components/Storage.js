@@ -42,7 +42,7 @@ export default class Storage {
             this.subscribers[ev] = []
         }
 
-        this.subscribers[ev].push(func)
+        this.subscribers[ev] = [...this.subscribers[ev], func]
 
     }
     fireSpecific(ev, data) {

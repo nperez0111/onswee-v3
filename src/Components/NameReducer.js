@@ -3,8 +3,9 @@ export default function NameReducer(state, action) {
 
     switch (action.type) {
         case 'update':
+            const obj = makeObj(action.id, action.name)
+            return state.setState({...state.getState(), ...obj })
 
-            return state.setState(Object.assign({}, state.getState(), makeObj(action.id, action.name)))
         default:
             return state
     }
