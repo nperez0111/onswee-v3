@@ -7,15 +7,15 @@ export default class Board extends Component {
         turn: PropTypes.number.isRequired
     }
     render() {
-        const { board, turn } = this.props;
+        const { board, turn, onSelect } = this.props;
 
         return (
-            <div className='board-container'>{ this.getSquares(board, turn) }</div>
+            <div className='board-container'>{ this.getSquares(board, turn,onSelect) }</div>
         );
     }
-    getSquares(board, turn) {
+    getSquares(board, turn, onSelect) {
         return board.map((player, pos) => {
-            return (<Square key={pos} position={pos} board={board} turn={turn} />)
+            return (<Square key={pos} position={pos} board={board} turn={turn} onSelect={onSelect} />)
         });
     }
 }

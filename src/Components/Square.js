@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import PlayerPiece from './PlayerPiece.js';
 import GameUtils from './GameUtils.js';
+import { makeObj } from '../Utils/Utils.js';
 import './Square.css';
 
 export default class Square extends Component {
@@ -10,11 +11,11 @@ export default class Square extends Component {
         turn: PropTypes.number.isRequired
     }
     render() {
-        const { turn, position, board } = this.props;
+        const { turn, position, board, onSelect } = this.props;
         return (
-            <div className={`square r${ Math.floor( position / 3 ) + 1 } c${ ( position % 3 ) + 1 }`}>
-					{this.getPiece(board,position,turn)}
-			</div>
+            <div className={`square r${ Math.floor( position / 3 ) + 1 } c${ ( position % 3 ) + 1 }`} onClick={this.select(position,onSelect)}>
+                    {this.getPiece(board,position,turn)}
+            </div>
         );
     }
     getPiece(board, position, turn) {
@@ -24,5 +25,8 @@ export default class Square extends Component {
             )
         }
         return ('');
+    }
+    select(position, fn) {
+        return () => { fn(makeObj(['type', 'selected'], ['select', position])) }
     }
 }
