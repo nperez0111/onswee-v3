@@ -35,6 +35,7 @@ export default class Storage {
         this.fireSpecific('willChange', this.state)
         this.state = actions.reduce(takeTwo(this.reducer), this.state)
         this.fireSpecific('hasChanged', this.state)
+        return this
     }
     on(ev, func) {
         if (!(ev in this.subscribers)) {
