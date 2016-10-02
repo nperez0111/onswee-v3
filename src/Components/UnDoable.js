@@ -1,4 +1,4 @@
-class UnDoer {
+class UnDoable {
     constructor(initState) {
         this.present = initState
         this.history = []
@@ -41,6 +41,6 @@ class UnDoer {
         return this
     }
 }
-export default function UnDoable(toUndo) {
-    return new UnDoer(toUndo)
+export default (toUndo) => {
+    return new UnDoable(toUndo)
 }
