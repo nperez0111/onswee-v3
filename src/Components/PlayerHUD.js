@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react';
-import GameUtils from './GameUtils.js';
+import GameLogic from './GameLogic.js';
 
 export default class Square extends Component {
     static propTypes = {
@@ -15,7 +15,7 @@ export default class Square extends Component {
     }
     displayEditNames(playerNames, turn, onEdit) {
         return playerNames.map((name, index) => {
-            const classNamed = `name ${GameUtils.isPlayersTurn(index,turn)?'active':''}`;
+            const classNamed = `name ${GameLogic.isPlayersTurn(index,turn)?'active':''}`;
             return (<input key={index} className={classNamed} value={name} onChange={onEdit(`player${index+1}`)} />)
         })
     }

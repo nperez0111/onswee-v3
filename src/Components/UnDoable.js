@@ -1,6 +1,3 @@
-export default function UnDoable(toUndo) {
-    return new UnDoer(toUndo)
-}
 class UnDoer {
     constructor(initState) {
         this.present = initState
@@ -33,9 +30,6 @@ class UnDoer {
         if (howManyTimes < 1) {
             return false
         }
-        if (howManyTimes === 1) {
-            return this.undo()
-        }
         for (let i = 0; i < howManyTimes - 1; i++) {
             this.undo()
         }
@@ -46,4 +40,7 @@ class UnDoer {
         this.present = newState
         return this
     }
+}
+export default function UnDoable(toUndo) {
+    return new UnDoer(toUndo)
 }

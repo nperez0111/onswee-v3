@@ -24,9 +24,16 @@ export default class Storage {
     getState() {
         return this.state
     }
-    dispatch(action) {
+    dispatch(actionList) {
+        const takeTwo = (fn) => {
+            return (a, b) => {
+                return fn(a, b)
+            }
+        }
+        const actions = Array.isArray(actionList) ? actionList : [actionList]
+
         this.fireSpecific('willChange', this.state)
-        this.state = this.reducer(this.state, action)
+        this.state = actions.reduce(takeTwo(this.reducer), this.state)
         this.fireSpecific('hasChanged', this.state)
     }
     on(ev, func) {

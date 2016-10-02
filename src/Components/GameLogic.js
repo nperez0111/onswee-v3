@@ -1,5 +1,6 @@
 import GameUtils from './GameUtils.js';
-
+import Reducer from './Reducer.js';
+window.reducer = Reducer
 export default class GameLogic extends GameUtils {
     static isWinIn(player, board) {
         const positions = this.getPlayersPositions(player, board).sort();
@@ -31,6 +32,20 @@ export default class GameLogic extends GameUtils {
         return this.allPosMoveLocs[pos].some((loc) => {
             return (this.hasPosIn(player, loc, board))
         })
+
+    }
+    static moveFromTo(player, board, fro, to) {
+        if (this.canMoveFromTo(player, board, fro, to)) {
+            return this.hypotheticalMoveInFromTo(player, board, fro, to)
+        }
+        return false
+    }
+    static hypotheticalMoveInFromTo(player, board, fro, to) {
+
+        var boardy = board.slice(0);
+        boardy[fro] = null;
+        boardy[to] = player;
+        return boardy;
 
     }
     static canMoveFromTo(player, board, fro, to) {

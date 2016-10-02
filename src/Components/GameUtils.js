@@ -1,7 +1,7 @@
 import Arrangements from './Arrangements.js';
 import { makeObj } from '../Utils/Utils.js';
 import Storage from './Storage.js';
-
+window.storage = Storage
 export default class Gameutils extends Arrangements {
     static isPlayersTurn(player, turn) {
         return player === this.getPlayer(turn)
@@ -36,9 +36,5 @@ export default class Gameutils extends Arrangements {
     }
     static makeState(player, fro, to) {
         return makeObj(['player', 'from', 'to'], [player, fro, to])
-    }
-    static revertState(state) {
-        const { player, from, to } = state
-        return this.makeAction(player, to, fro)
     }
 }
