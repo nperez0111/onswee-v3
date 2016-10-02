@@ -26,8 +26,12 @@ export default class GameView extends Component {
                 selected: null
             })
         }
-        this.state.select.on('willChange', a => { GameUtils.logger("before", a) })
-        this.state.select.on('hasChanged', a => { GameUtils.logger("after", a) })
+        const log = (time, func = b => b) => {
+            return a => { GameUtils.logger(`State ${time}: ${JSON.stringify(func(a), null, '\t')}`) }
+        }
+        this.state.select.on('willChange', log('Before'))
+        this.state.select.on('hasChanged', log('After'))
+        this.state.names.on('hasChanged', log('After', a => a.getState()))
         this.handleNameChange = this.handleNameChange.bind(this)
         this.stateChangeOf = this.stateChangeOf.bind(this)
     }
