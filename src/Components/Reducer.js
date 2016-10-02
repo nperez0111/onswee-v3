@@ -5,9 +5,14 @@ const playerFroTo = (a) => isInCorrectFormat(a, { player: is.number, from: is.nu
 
 export default function Reducer(state, action) {
 
-    if (playerFroTo(action) && GameLogic.canMoveFromTo(action.player, state.board, action.from, action.to)) {
-        let { turn, board } = state
-        return { turn: turn + 1, board: GameLogic.moveFromTo(action.player, board, action.from, action.to) }
+    switch (action.type) {
+        case 'move':
+            if (playerFroTo(action) && GameLogic.canMoveFromTo(action.player, state.board, action.from, action.to)) {
+                let { turn, board } = state
+                return { turn: turn + 1, board: GameLogic.moveFromTo(action.player, board, action.from, action.to) }
+            }
+            return state
+        default:
+            return state
     }
-    return state
 }
