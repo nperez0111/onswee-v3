@@ -21,7 +21,7 @@ class UnDoable {
         if (this.future.length === 0) {
             return false
         }
-        const oldState = this.future.shift()
+        const oldState = this.future.pop()
         this.history.push(this.present)
         this.present = oldState
         return this
