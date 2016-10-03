@@ -1,4 +1,4 @@
-import GameUtils from './GameUtils.js';
+import GameUtils from './Utils.js';
 const g = GameUtils;
 const e = expect;
 const b = [1, null, 2, 1, 2, null, 2, 1, null];

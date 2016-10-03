@@ -1,4 +1,4 @@
-import GameLogic from './GameLogic.js';
+import Logic from './Logic.js';
 import isInCorrectFormat, { is } from 'is-in-correct-format';
 
 const playerFroTo = (a) => isInCorrectFormat(a, { player: is.number, from: is.number, to: is.number })
@@ -14,13 +14,13 @@ export default function Reducer(state, action) {
     switch (action.type) {
         case 'move':
             let { player, to } = action
-            if (playerFroTo(action) && GameLogic.canMoveFromTo(player, board, action.from, to)) {
+            if (playerFroTo(action) && Logic.canMoveFromTo(player, board, action.from, to)) {
 
-                return setState(state)({...addTurn, board: GameLogic.moveFromTo(player, board, action.from, to) })
+                return setState(state)({...addTurn, board: Logic.moveFromTo(player, board, action.from, to) })
             }
             return state
         case 'put':
-            return setState(state)({...addTurn, board: GameLogic.add(GameLogic.getPlayer(turn), board, action.to) })
+            return setState(state)({...addTurn, board: Logic.add(Logic.getPlayer(turn), board, action.to) })
         default:
             return state
     }

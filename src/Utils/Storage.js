@@ -1,4 +1,4 @@
-import LocalStorage from '../Utils/LocalStorage.js';
+import LocalStorage from './LocalStorage.js';
 
 export default class Storage {
     constructor(reducer, state = {}) {

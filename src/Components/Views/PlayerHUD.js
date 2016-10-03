@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react';
-import GameLogic from './GameLogic.js';
+import GameLogic from '../Game/Logic.js';
 
 export default class Square extends Component {
     static propTypes = {

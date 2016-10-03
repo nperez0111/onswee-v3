@@ -1,5 +1,5 @@
-import GameLogic from './GameLogic.js';
-const g = GameLogic;
+import Logic from './Logic.js';
+const g = Logic;
 const e = expect;
 const b = [1, null, 2, 1, 2, null, 2, 1, null];
 const w = [1, 2, null, 2, 1, null, null, 2, 1];

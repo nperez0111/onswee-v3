@@ -1,4 +1,4 @@
-import GameLogic from '../GameLogic.js';
+import GameLogic from '../Game/Logic.js';
 import { makeObj } from '../../Utils/Utils.js';
 export default function(data) {
 

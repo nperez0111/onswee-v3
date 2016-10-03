@@ -1,15 +1,15 @@
 import React, { Component } from 'react';
-import { makeObj } from '../Utils/Utils.js';
+import { makeObj } from '../../Utils/Utils.js';
 import Board from './Board.js';
-import GameLogic from './GameLogic.js';
-import PlayerHUD from './PlayerHUD.js';
-import TurnHUD from './TurnHUD.js';
-import Storage from './Storage.js';
+import GameLogic from './Logic.js';
+import PlayerHUD from '../Views/PlayerHUD.js';
+import TurnHUD from '../Views/TurnHUD.js';
+import Storage from '../../Utils/Storage.js';
 import Reducer from './Reducer.js';
 import NameReducer from './NameReducer.js';
-import SelectReducer from './Select/Reducer.js';
-import UnDoable from './UnDoable.js';
-import SelectMiddleWare from './Select/MiddleWare.js';
+import SelectReducer from '../Select/Reducer.js';
+import UnDoable from '../../Utils/UnDoable.js';
+import SelectMiddleWare from '../Select/MiddleWare.js';
 
 export default class GameView extends Component {
     constructor(a) {

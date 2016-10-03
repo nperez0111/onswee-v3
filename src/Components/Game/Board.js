@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react';
-import Square from './Square.js';
+import Square from '../Views/Square.js';
 import './Board.css';
 export default class Board extends Component {
     static propTypes = {

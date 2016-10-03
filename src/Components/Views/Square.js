@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import PlayerPiece from './PlayerPiece.js';
-import GameUtils from './GameUtils.js';
-import { makeObj } from '../Utils/Utils.js';
+import GameUtils from '../Game/Utils.js';
+import { makeObj } from '../../Utils/Utils.js';
 import './Square.css';
 
 export default class Square extends Component {

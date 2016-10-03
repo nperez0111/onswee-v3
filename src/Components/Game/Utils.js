@@ -1,8 +1,7 @@
 import Arrangements from './Arrangements.js';
-import { makeObj } from '../Utils/Utils.js';
-import Storage from './Storage.js';
-window.storage = Storage
-export default class Gameutils extends Arrangements {
+import { makeObj } from '../../Utils/Utils.js';
+
+export default class GameUtils extends Arrangements {
     static isPlayersTurn(player, turn) {
         return player === this.getPlayer(turn)
     }

@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react';
-import getImageIcon from '../Utils/PlayerIcon.js';
+import getImageIcon from '../../Utils/PlayerIcon.js';
 
 export default class PlayerPiece extends Component {
     static propTypes = {

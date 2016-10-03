@@ -1,4 +1,4 @@
-import GameUtils from './GameUtils.js';
+import GameUtils from './Utils.js';
 import Reducer from './Reducer.js';
 window.reducer = Reducer
 export default class GameLogic extends GameUtils {
