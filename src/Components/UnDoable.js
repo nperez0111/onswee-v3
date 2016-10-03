@@ -38,6 +38,7 @@ class UnDoable {
     setState(newState) {
         this.history.push(this.present)
         this.present = newState
+        this.future = []
         return this
     }
 }
