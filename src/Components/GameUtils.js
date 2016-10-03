@@ -35,6 +35,6 @@ export default class Gameutils extends Arrangements {
         });
     }
     static makeState(player, fro, to) {
-        return makeObj(['player', 'from', 'to', 'action'], [player, fro, to, 'move'])
+        return makeObj(['player', 'from', 'to', 'type'], [player, fro, to, 'move'])
     }
 }
