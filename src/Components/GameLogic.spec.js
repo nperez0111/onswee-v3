@@ -25,3 +25,8 @@ it('knows the diff between two boards', () => {
     const newone = [null, 1, 2, 1, 2, null, 2, 1, null]
     e(g.changeBetween(b, newone)).toEqual([0, 1])
 })
+it('knows the possible move locations', () => {
+    e(g.getPossibleMoveLocs(0, b, 1)).toEqual([false, true, false, false, false, false, false, false, false])
+    e(g.getPossibleMoveLocs(3, b, 1)).toEqual([false, false, false, false, false, false, false, false, false])
+    e(g.getPossibleMoveLocs(7, b, 1)).toEqual([false, false, false, false, false, false, false, false, true])
+})

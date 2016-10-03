@@ -81,4 +81,9 @@ export default class GameLogic extends GameUtils {
         });
         return ret;
     }
+    static getPossibleMoveLocs(selected, board, turn) {
+        return board.map((loc, to) => {
+            return this.canMoveFromTo(this.getPlayer(turn), board, selected, to)
+        })
+    }
 }
