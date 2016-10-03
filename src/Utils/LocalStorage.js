@@ -21,7 +21,11 @@ export default class LocalStorage {
     }
     static getObj(key) {
         if (this.supportsLocalStorage()) {
-            return JSON.parse(localStorage.getItem(key));
+            const objToBeParsed = localStorage.getItem(key)
+
+            if (objToBeParsed !== undefined && objToBeParsed !== null) {
+                return JSON.parse(objToBeParsed)
+            }
         }
         return null;
     }
