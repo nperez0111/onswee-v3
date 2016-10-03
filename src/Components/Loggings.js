@@ -13,11 +13,11 @@ export default class Loggings {
             br = "|";
         board.forEach((cur, i) => {
             if (i / 3 < 1) {
-                bro += this.hasPosIn(this.getPlayerNum(1), i, board) ? ' X ' : this.isEmptyPosIn(i, board) ? ' ' + i + ' ' : ' O ';
+                bro += board[i] === 1 ? ' X ' : board[i] === null ? ' ' + i + ' ' : ' O ';
             } else if (i / 3 < 2) {
-                brt += this.hasPosIn(this.getPlayerNum(1), i, board) ? ' X ' : this.isEmptyPosIn(i, board) ? ' ' + i + ' ' : ' O ';
+                brt += board[i] === 1 ? ' X ' : board[i] === null ? ' ' + i + ' ' : ' O ';
             } else {
-                br += this.hasPosIn(this.getPlayerNum(1), i, board) ? ' X ' : this.isEmptyPosIn(i, board) ? ' ' + i + ' ' : ' O ';
+                br += board[i] === 1 ? ' X ' : board[i] === null ? ' ' + i + ' ' : ' O ';
             }
         });
 
@@ -25,11 +25,10 @@ export default class Loggings {
         brt += "|";
         br += "|";
         //TODO getname
-        const whosturn = "Now it's " + this.getName(this.get("player")) + "'s turn";
+        const whosturn = "Now it's 's turn";
 
         this.logger(whosturn.split("").fill('_').join(""));
-        this.logger("Turn Number:" + this.get("turns"));
-        this.logger(bro, brt, br, whosturn, whosturn.split("").fill('‾').join(""));
+        this.logger(bro, brt, br, whosturn.split("").fill('‾').join(""));
     }
     static logAll = true;
 
