@@ -17,7 +17,7 @@ export default class GameUtils extends Arrangements {
         }, [])
     }
     static getPlayerNum(id) {
-        return id === 1 || id === 2 ? id : false;
+        return id === this.Constants.player1 || id === this.Constants.player2 ? id : false;
     }
     static isEmptyPos(pos, board) {
         return board[pos] === null
