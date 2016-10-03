@@ -5,7 +5,7 @@ export default function SelectReducer(state, action) {
 
             if (state.selected !== action.selected) {
 
-                return {...state, selected: action.selected }
+                return { selected: action.selected }
 
             } else {
 
@@ -15,7 +15,10 @@ export default function SelectReducer(state, action) {
 
         case 'deselect':
 
-            return {...state, selected: null }
+            return { selected: null }
+        case 'move':
+            return { update: { fro: state.selected, to: action.selected } }
+
 
         default:
             return state
