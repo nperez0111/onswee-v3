@@ -17,12 +17,13 @@ export default class TurnHUD extends Component {
 				<div className='Player-GUI'>
 					{this.displayPlayers(playerNames,player)}
 				</div>
+                <div className='undo'>{this.props.children}</div>
 			</div>
         )
     }
     displayPlayers(names, current) {
         return names.map((name, i) => {
-            return (<div key={i} className={`player ${names[current]===name?'active':''}`}>{name}</div>)
+            return (<div key={i} className={`player ${names[current]===name?'active':''}`}><h3>{name}</h3></div>)
         })
     }
 }
