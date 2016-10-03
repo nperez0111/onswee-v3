@@ -6,6 +6,9 @@ export default class Storage {
         this.reducer = reducer
         this.subscribers = {}
     }
+    static log(time, func = b => b) {
+        return a => { console.log(`%cState ${time}: %c${JSON.stringify(func(a), null, '\t')}`, "color:lightgreen", "color:inherit") }
+    }
     static newStorage(reducer, state) {
         return new Storage(reducer, state)
     }
