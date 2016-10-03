@@ -1,12 +1,16 @@
 class UnDoable {
-    constructor(initState) {
+    constructor(initState, hist) {
+        console.log(arguments)
         this.present = initState
-        this.history = []
+        this.history = hist || []
         this.future = []
-
+        console.log(this.history)
     }
     getState() {
         return this.present
+    }
+    getHistory() {
+        return this.history
     }
     undo() {
         if (this.history.length === 0) {
@@ -42,6 +46,6 @@ class UnDoable {
         return this
     }
 }
-export default (toUndo) => {
-    return new UnDoable(toUndo)
+export default (toUndo, history) => {
+    return new UnDoable(toUndo, history)
 }
