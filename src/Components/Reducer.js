@@ -7,9 +7,11 @@ export default function Reducer(state, action) {
 
     switch (action.type) {
         case 'move':
-            if (playerFroTo(action) && GameLogic.canMoveFromTo(action.player, state.board, action.from, action.to)) {
-                let { turn, board } = state
-                return {...state, turn: turn + 1, board: GameLogic.moveFromTo(action.player, board, action.from, action.to) }
+            const { turn, board } = state.getState()
+            const { player, to } = action
+            if (playerFroTo(action) && GameLogic.canMoveFromTo(player, board, action.from, to)) {
+
+                return state.setState({ turn: turn + 1, board: GameLogic.moveFromTo(player, board, action.from, to) })
             }
             return state
         default:

@@ -12,9 +12,9 @@ export default class Square extends Component {
     }
     render() {
         const { onSelect, position, selected } = this.props;
-        console.log(selected)
+
         return (
-            <div className={`square r${ Math.floor( position / 3 ) + 1 } c${ ( position % 3 ) + 1 } ${selected?'selected':''}`} onClick={this.select(position,onSelect)}>
+            <div className={`square r${ Math.floor( position / 3 ) + 1 } c${ ( position % 3 ) + 1 } ${selected?'selected':''}`} onClick={this.select(position,onSelect,selected)}>
                     {this.getPiece(this.props)}
             </div>
         );
@@ -28,7 +28,14 @@ export default class Square extends Component {
         }
         return ('');
     }
-    select(position, fn) {
-        return () => { fn(makeObj(['type', 'selected'], ['select', position])) }
+    select(position, fn, selected) {
+
+        return () => {
+            let obj = makeObj(['type', 'selected'], ['select', position])
+            if (selected) {
+                obj.type = 'move'
+            }
+            fn(obj)
+        }
     }
 }

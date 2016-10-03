@@ -11,3 +11,7 @@
 .square .piece.player2 {
     background: #333;
 }
+
+.square.selected {
+    background: #DDD;
+}
