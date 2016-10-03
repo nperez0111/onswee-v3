@@ -9,13 +9,14 @@ import Reducer from './Reducer.js';
 import NameReducer from './NameReducer.js';
 import SelectReducer from './SelectReducer.js';
 import UnDoable from './UnDoable.js';
+import SelectMiddleWare from './SelectMiddleWare.js';
 
 export default class GameView extends Component {
     constructor(a) {
         super(a)
         this.state = {
             game: Storage.newStorage(Reducer, UnDoable({
-                board: [1, null, 1, 2, 1, 2, 1, 2, 1], //(new Array(9)).fill(null),
+                board: (new Array(9)).fill(null), //[1, null, 1, 2, 1, 2, 1, 2, 1], //
                 turn: 1
             })),
             names: Storage.newStorage(NameReducer, UnDoable({
@@ -26,16 +27,11 @@ export default class GameView extends Component {
                 selected: null
             })
         }
-        this.state.select.on('willChange', Storage.log('Before'))
-        this.state.select.on('hasChanged', Storage.log('After'))
-        this.state.select.on('hasChanged', data => {
-            if ('update' in data) {
-                const board = this.state.game.getState().getState().board
-                const { fro, to } = data.update
-                const action = GameLogic.makeState(board[fro], fro, to)
-                this.stateChangeOf('game')(action)
-            }
-        })
+        this.state.select.on('willChange', Storage.log('Before', undefined, "Select"))
+        this.state.select.on('hasChanged', Storage.log('After', undefined, "Select"))
+
+        this.state.select.on('hasChanged', SelectMiddleWare.bind(this))
+
         this.state.names.on('hasChanged', Storage.log('After', a => a.getState()))
         this.handleNameChange = this.handleNameChange.bind(this)
         this.stateChangeOf = this.stateChangeOf.bind(this)
@@ -70,6 +66,9 @@ export default class GameView extends Component {
             this.setState(makeObj([ctx], [dispatch]))
             return dispatch
         }
+    }
+    dispatchGame(action) {
+        return this.stateChangeOf('game')(action)
     }
     handleNameChange(id) {
         return e => {

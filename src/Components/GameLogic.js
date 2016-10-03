@@ -48,6 +48,12 @@ export default class GameLogic extends GameUtils {
         return boardy;
 
     }
+    static add(player, bord, to) {
+        const board = bord.slice(0)
+        board[to] = player
+        return board
+
+    }
     static canMoveFromTo(player, board, fro, to) {
 
         //check if where we are moving is even empty
