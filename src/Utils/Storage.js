@@ -15,14 +15,25 @@ export default class Storage {
     saveCurState(prefix) {
         Storage.saveState(prefix, this.state)
     }
-    loadStateIntoNewStorage(prefix, reducer) {
+    loadCurState(prefix) {
+        const state = Storage.loadState(prefix)
+        if (state) {
+            this.state = state
+            return true
+        }
+        return false
+    }
+    static loadStateIntoNewStorage(prefix, reducer) {
         return Storage.newStorage(reducer, Storage.loadState(prefix) || undefined)
     }
+    static prefix(prefix) {
+        return `${prefix}-state`
+    }
     static saveState(prefix, state) {
-        LocalStorage.setObj(`${prefix}-state`, state)
+        LocalStorage.setObj(Storage.prefix(prefix), state)
     }
     static loadState(prefix) {
-        return LocalStorage.getObj(`${prefix}-state`)
+        return LocalStorage.getObj(Storage.prefix(prefix))
     }
     getState() {
         return this.state

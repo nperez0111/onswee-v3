@@ -1,5 +1,12 @@
 import Storage from './Storage.js';
 
+const localStorageMock = {
+    getItem: jest.fn(),
+    setItem: jest.fn(),
+    clear: jest.fn()
+}
+global.localStorage = localStorageMock
+global.window.localStorage = localStorageMock
 const e = expect;
 const s = Storage;
 const reducer = (state, action) => {
@@ -53,4 +60,20 @@ it('notifies subscribers', () => {
     t.dispatch({})
     e(func).toBeCalled()
     e(func).toBeCalledWith(data)
+})
+it('stores current State into localstorage', () => {
+    const data = { counter: 1 }
+    const t = s.newStorage(reducer, data)
+    t.saveCurState("count")
+    e(localStorageMock.setItem).toBeCalled()
+    e(localStorageMock.setItem).toBeCalledWith("count-state", JSON.stringify(data))
+})
+it('loads current State from localstorage', () => {
+    const data = { counter: 1 }
+    localStorageMock.getItem.mockReturnValueOnce(JSON.stringify({ a: 2 }))
+    const t = s.newStorage(reducer, data)
+    e(t.loadCurState("count")).toBe(true)
+    e(localStorageMock.getItem).toBeCalled()
+    e(localStorageMock.getItem).toBeCalledWith("count-state")
+    e(t.getState()).toEqual({ a: 2 })
 })
