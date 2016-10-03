@@ -7,9 +7,9 @@ import TurnHUD from './TurnHUD.js';
 import Storage from './Storage.js';
 import Reducer from './Reducer.js';
 import NameReducer from './NameReducer.js';
-import SelectReducer from './SelectReducer.js';
+import SelectReducer from './Select/Reducer.js';
 import UnDoable from './UnDoable.js';
-import SelectMiddleWare from './SelectMiddleWare.js';
+import SelectMiddleWare from './Select/MiddleWare.js';
 
 export default class GameView extends Component {
     constructor(a) {

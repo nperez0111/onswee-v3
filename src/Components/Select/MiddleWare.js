@@ -1,5 +1,5 @@
-import GameLogic from './GameLogic.js';
-import { makeObj } from '../Utils/Utils.js';
+import GameLogic from '../GameLogic.js';
+import { makeObj } from '../../Utils/Utils.js';
 export default function(data) {
 
     if ('update' in data) {
