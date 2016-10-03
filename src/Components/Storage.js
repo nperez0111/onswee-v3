@@ -35,9 +35,9 @@ export default class Storage {
         }
         const actions = Array.isArray(actionList) ? actionList : [actionList]
 
-        this.fireSpecific('willChange', this.state)
+        this.fireWith('willChange', this.state)
         this.state = actions.reduce(takeTwo(this.reducer), this.state)
-        this.fireSpecific('hasChanged', this.state)
+        this.fireWith('hasChanged', this.state)
         return this
     }
     on(ev, func) {
@@ -48,7 +48,7 @@ export default class Storage {
         this.subscribers[ev] = [...this.subscribers[ev], func]
 
     }
-    fireSpecific(ev, data) {
+    fireWith(ev, data) {
         if (ev in this.subscribers) {
             return this.subscribers[ev].map((func) => {
                 return func.call(this, data)
@@ -56,6 +56,6 @@ export default class Storage {
         }
     }
     fire(ev) {
-        return this.fireSpecific(ev, this)
+        return this.fireWith.call(this, ev, this)
     }
 }
