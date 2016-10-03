@@ -15,8 +15,8 @@ export default class GameView extends Component {
     constructor(a) {
         super(a)
         this.state = {
-            game: Storage.newStorage(Reducer, UnDoable({
-                board: (new Array(9)).fill(null), //[1, null, 1, 2, 1, 2, 1, 2, 1], //
+            game: Storage.loadStateIntoNewStorage('game', Reducer, (a) => UnDoable('init' in a ? a.init : a, a.history), ({
+                board: (new Array(9)).fill(null),
                 turn: 1
             })),
             names: Storage.newStorage(NameReducer, UnDoable({

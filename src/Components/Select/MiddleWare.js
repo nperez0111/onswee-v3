@@ -9,11 +9,17 @@ export default function(data) {
         const action = GameLogic.makeState(board[fro], fro, to)
 
         this.dispatchGame(action)
+            //this.state.game.saveCurState('game', a => makeObj(['init', 'history'], [a.getState(), a.getHistory()]))
 
     } else if ('put' in data) {
-        console.log('put')
+
         const action = makeObj(['type', 'to'], ['put', data.put])
-        this.dispatchGame(action)
+        const board = this.state.game.getState().getState().board
+
+        //make sure the position is not already filled otherwise ignore the event
+        if (GameLogic.isEmptyPos(data.put, board)) {
+            this.dispatchGame(action)
+        }
 
     }
 

@@ -12,19 +12,19 @@ export default class Storage {
     static newStorage(reducer, state) {
         return new Storage(reducer, state)
     }
-    saveCurState(prefix) {
-        Storage.saveState(prefix, this.state)
+    saveCurState(prefix, func = a => a) {
+        Storage.saveState(prefix, func(this.state))
     }
-    loadCurState(prefix) {
+    loadCurState(prefix, func) {
         const state = Storage.loadState(prefix)
         if (state) {
-            this.state = state
+            this.state = func(state)
             return true
         }
         return false
     }
-    static loadStateIntoNewStorage(prefix, reducer) {
-        return Storage.newStorage(reducer, Storage.loadState(prefix) || undefined)
+    static loadStateIntoNewStorage(prefix, reducer, func = a => a, whenInDoubt) {
+        return Storage.newStorage(reducer, func(Storage.loadState(prefix) || whenInDoubt))
     }
     static prefix(prefix) {
         return `${prefix}-state`
