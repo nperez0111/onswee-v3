@@ -11,10 +11,10 @@ export default class Square extends Component {
         turn: PropTypes.number.isRequired
     }
     render() {
-        const { onSelect, position, selected } = this.props;
+        const { onSelect, position, selected, turn } = this.props;
 
         return (
-            <div className={`square r${ Math.floor( position / 3 ) + 1 } c${ ( position % 3 ) + 1 } ${selected?'selected':''}`} onClick={this.select(position,onSelect,selected)}>
+            <div className={`square r${ Math.floor( position / 3 ) + 1 } c${ ( position % 3 ) + 1 } ${selected?'selected':''}`} onClick={this.select(position,onSelect,selected,turn)}>
                     {this.getPiece(this.props)}
             </div>
         );
@@ -28,12 +28,15 @@ export default class Square extends Component {
         }
         return ('');
     }
-    select(position, fn, selected) {
+    select(position, fn, selected, turn) {
 
         return () => {
             let obj = makeObj(['type', 'selected'], ['select', position])
             if (selected) {
                 obj.type = 'move'
+            }
+            if (turn < GameUtils.Constants.placingRound) {
+                obj.type = 'put'
             }
             fn(obj)
         }

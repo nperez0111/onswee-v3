@@ -1,4 +1,5 @@
 import Loggings from './Loggings.js';
+import Constants from './Constants.js';
 
 export default class Arrangements extends Loggings {
     static illegalMovements = [
@@ -190,4 +191,5 @@ export default class Arrangements extends Loggings {
             [1, 4, 6]
         ] //end of side traps
     ];
+    static Constants = Constants;
 }
