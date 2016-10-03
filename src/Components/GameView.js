@@ -39,6 +39,7 @@ export default class GameView extends Component {
         this.state.names.on('hasChanged', Storage.log('After', a => a.getState()))
         this.handleNameChange = this.handleNameChange.bind(this)
         this.stateChangeOf = this.stateChangeOf.bind(this)
+        this.undoableMethod = this.undoableMethod.bind(this)
     }
     render() {
         const { board, turn } = this.state.game.getState().getState()
@@ -46,11 +47,19 @@ export default class GameView extends Component {
         const { selected } = this.state.select.getState()
         return (
             <div className='game-container'>
+            <button onClick={this.undoableMethod('undo','game')}>Undo</button><button onClick={this.undoableMethod('redo','game')}>Redo</button>
                 <TurnHUD turn={turn} player={GameLogic.getPlayer(turn)} playerNames={[player1,player2]} />
                 <Board board={board} turn={turn} onSelect={this.stateChangeOf('select')} selected={GameLogic.getPossibleMoveLocs(selected,board,turn)} />
                 <PlayerHUD turn={turn} playerNames={[player1,player2]} onEdit={this.handleNameChange} />
             </div>
         )
+    }
+    undoableMethod(func, ctx) {
+        return () => {
+            const obj = this.state[ctx]
+            obj.getState()[func]()
+            this.setState(makeObj([ctx], [obj]))
+        }
     }
     stateChangeOf(ctx) {
         return action => {
