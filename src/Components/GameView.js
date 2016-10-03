@@ -28,6 +28,14 @@ export default class GameView extends Component {
         }
         this.state.select.on('willChange', Storage.log('Before'))
         this.state.select.on('hasChanged', Storage.log('After'))
+        this.state.select.on('hasChanged', data => {
+            if ('update' in data) {
+                const board = this.state.game.getState().getState().board
+                const { fro, to } = data.update
+                const action = GameLogic.makeState(board[fro], fro, to)
+                this.stateChangeOf('game')(action)
+            }
+        })
         this.state.names.on('hasChanged', Storage.log('After', a => a.getState()))
         this.handleNameChange = this.handleNameChange.bind(this)
         this.stateChangeOf = this.stateChangeOf.bind(this)
@@ -46,15 +54,9 @@ export default class GameView extends Component {
     }
     stateChangeOf(ctx) {
         return action => {
-            const state = this.state[ctx]
-            const dispatch = state.dispatch(action)
+            const dispatch = this.state[ctx].dispatch(action)
 
-            if ('undo' in state.getState()) {
-
-                this.setState(makeObj([ctx], [dispatch]))
-
-            }
-
+            this.setState(makeObj([ctx], [dispatch]))
             return dispatch
         }
     }
