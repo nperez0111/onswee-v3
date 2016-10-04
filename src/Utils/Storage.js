@@ -9,7 +9,7 @@ export default class Storage {
     static log(time, func = b => b, label = '') {
         return a => { console.log(`%c${label} State ${time}: %c${JSON.stringify(func(a), null, '\t')}`, "color:lightgreen", "color:inherit") }
     }
-    static newStorage(reducer, state) {
+    static new(reducer, state) {
         return new Storage(reducer, state)
     }
     saveCurState(prefix, func = a => a) {
@@ -23,8 +23,8 @@ export default class Storage {
         }
         return false
     }
-    static loadStateIntoNewStorage(prefix, reducer, func = a => a, whenInDoubt) {
-        return Storage.newStorage(reducer, func(Storage.loadState(prefix) || whenInDoubt))
+    static getFromLocalStorage(prefix, reducer, func = a => a, whenInDoubt) {
+        return Storage.new(reducer, func(Storage.loadState(prefix) || whenInDoubt))
     }
     static prefix(prefix) {
         return `${prefix}-state`

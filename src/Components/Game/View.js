@@ -22,15 +22,15 @@ export default class GameView extends Component {
         }
 
         this.state = {
-            game: Storage.loadStateIntoNewStorage('game', Reducer, handleUndo, {
+            game: Storage.getFromLocalStorage('game', Reducer, handleUndo, {
                 board: (new Array(9)).fill(null),
                 turn: 1
             }),
-            names: Storage.newStorage(NameReducer, UnDoable.new({
+            names: Storage.new(NameReducer, UnDoable.new({
                 player1: 'Player 1',
                 player2: 'Player 2'
             })),
-            select: Storage.newStorage(SelectReducer, {
+            select: Storage.new(SelectReducer, {
                 selected: null
             })
         }
