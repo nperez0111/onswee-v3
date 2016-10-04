@@ -26,7 +26,7 @@ export default class GameView extends Component {
                 board: (new Array(9)).fill(null),
                 turn: 1
             }),
-            names: Storage.new(NameReducer, UnDoable.new({
+            names: Storage.getFromLocalStorage('names', NameReducer, handleUndo, ({
                 player1: 'Player 1',
                 player2: 'Player 2'
             })),
@@ -41,11 +41,17 @@ export default class GameView extends Component {
 
         //Pretty log for state change of names
         this.state.names.on('hasChanged', Storage.log('After', a => a.getState()))
+        this.state.names.on('hasChanged', function(state) {
+            this.saveCurState('names', UnDoable.toState)
+        })
 
         /*/Pretty log for state change of game
         this.state.game.on('hasChanged', Storage.log('After Move', a => '', "Game"))
         this.state.game.on('hasChanged', a => { GameLogic.trackcurrent(a.getState().board) })
         //*/
+        this.state.game.on('hasChanged', function(state) {
+            this.saveCurState('game', UnDoable.toState)
+        })
 
 
 
