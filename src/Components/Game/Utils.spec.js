@@ -41,3 +41,21 @@ it('knows an empty position', () => {
     e(g.isEmptyPos(1, b)).toBe(true)
     e(g.isEmptyPos(2, b)).toBe(false)
 })
+it('knows how to get another player', () => {
+    e(g.getOtherPlayer(1)).toBe(2)
+    e(g.getOtherPlayer(2)).toBe(1)
+    e(() => g.getOtherPlayer(true)).toThrow(Error)
+})
+it('knows how to make an empty board', () => {
+    e(g.getEmptyBoard()).toEqual([null, null, null, null, null, null, null, null, null])
+})
+it('knows when the placing round is', () => {
+    e(g.isPlacingRound(6)).toBe(true)
+    e(g.isPlacingRound(7)).toBe(false)
+    e(g.isPlacingRound(9)).toBe(false)
+})
+it('knows when the extra rules round is', () => {
+    e(g.isExtraRulesRound(12)).toBe(true)
+    e(g.isExtraRulesRound(13)).toBe(false)
+    e(g.isExtraRulesRound(14)).toBe(false)
+})
