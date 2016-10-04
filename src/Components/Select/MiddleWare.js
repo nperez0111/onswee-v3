@@ -1,6 +1,5 @@
 import GameLogic from '../Game/Logic.js';
 import { makeObj } from '../../Utils/Utils.js';
-import UnDoable from '../../Utils/UnDoable.js';
 
 export default function(data) {
 
@@ -16,7 +15,6 @@ export default function(data) {
                 action = GameLogic.makeState(player, fro, to)
 
                 this.dispatchGame(action)
-                this.state.game.saveCurState('game', UnDoable.toState)
                 break;
             case 'put':
                 action = makeObj(['type', 'to'], ['put', data.put])
