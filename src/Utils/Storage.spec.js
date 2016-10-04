@@ -22,7 +22,7 @@ const reducer = (state, action) => {
 
 it('only calls reducer when dispatched', () => {
     const func = jest.fn()
-    const t = s.newStorage(func, { counter: 1 })
+    const t = s.new(func, { counter: 1 })
     e(func).not.toBeCalled()
     t.dispatch({})
     e(func).toBeCalled()
@@ -30,7 +30,7 @@ it('only calls reducer when dispatched', () => {
 it('calls the reducer with proper arguments', () => {
     const func = jest.fn()
     const data = { a: 1 }
-    const t = s.newStorage(func, data)
+    const t = s.new(func, data)
 
     e(func).not.toBeCalled()
 
@@ -40,8 +40,8 @@ it('calls the reducer with proper arguments', () => {
     e(func).toBeCalledWith(data, action)
 })
 it('gets proper state', () => {
-    e(s.newStorage(reducer, { a: 2 }).getState().a).toBe(2)
-    e(s.newStorage(reducer).getState()).toEqual({})
+    e(s.new(reducer, { a: 2 }).getState().a).toBe(2)
+    e(s.new(reducer).getState()).toEqual({})
 })
 
 it('stores state and manipulates state', () => {
@@ -54,7 +54,7 @@ it('stores state and manipulates state', () => {
 })
 it('notifies subscribers', () => {
     const data = { counter: 1 }
-    const t = s.newStorage(reducer, data)
+    const t = s.new(reducer, data)
     const func = jest.fn()
     t.on('willChange', func)
     t.dispatch({})
@@ -63,7 +63,7 @@ it('notifies subscribers', () => {
 })
 it('stores current State into localstorage', () => {
     const data = { counter: 1 }
-    const t = s.newStorage(reducer, data)
+    const t = s.new(reducer, data)
     t.saveCurState("count")
     e(localStorageMock.setItem).toBeCalled()
     e(localStorageMock.setItem).toBeCalledWith("count-state", JSON.stringify(data))
@@ -71,7 +71,7 @@ it('stores current State into localstorage', () => {
 it('loads current State from localstorage', () => {
     const data = { counter: 1 }
     localStorageMock.getItem.mockReturnValueOnce(JSON.stringify({ a: 2 }))
-    const t = s.newStorage(reducer, data)
+    const t = s.new(reducer, data)
     e(t.loadCurState("count")).toBe(true)
     e(localStorageMock.getItem).toBeCalled()
     e(localStorageMock.getItem).toBeCalledWith("count-state")

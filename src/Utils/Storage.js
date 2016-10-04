@@ -15,7 +15,7 @@ export default class Storage {
     saveCurState(prefix, func = a => a) {
         Storage.saveState(prefix, func(this.state))
     }
-    loadCurState(prefix, func) {
+    loadCurState(prefix, func = a => a) {
         const state = Storage.loadState(prefix)
         if (state) {
             this.state = func(state)

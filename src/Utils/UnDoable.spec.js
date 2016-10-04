@@ -1,6 +1,6 @@
 import UnDoable from './UnDoable.js';
 const e = expect;
-const u = UnDoable;
+const u = UnDoable.new;
 it('returns an object', () => {
     e(u(1)).toBeTruthy()
 })
