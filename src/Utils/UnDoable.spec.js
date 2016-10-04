@@ -24,6 +24,10 @@ it('knows when it is unavailable to undo', () => {
 it('knows when it is unavailable to redo', () => {
     e(u(1).redo()).toBe(false)
 })
+it('stores history', () => {
+    e(u(1).setState(2).getHistory()).toEqual([1])
+    e(u(1).setState(2).setState(3).undo().redo().undo().getHistory()).toEqual([1])
+})
 it('knows how to undo multiple times over', () => {
     e(u(1).setState(2).setState(3).setState(4).revert(1).getState()).toBe(3)
     e(u(1).setState(2).setState(3).setState(4).revert(2).getState()).toBe(2)

@@ -1,10 +1,8 @@
 class UnDoable {
     constructor(initState, hist) {
-        console.log(arguments)
         this.present = initState
         this.history = hist || []
         this.future = []
-        console.log(this.history)
     }
     getState() {
         return this.present
