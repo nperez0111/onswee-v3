@@ -1,8 +1,11 @@
-class UnDoable {
+export default class UnDoable {
     constructor(initState, hist) {
         this.present = initState
         this.history = hist || []
         this.future = []
+    }
+    static new(init, history) {
+        return new UnDoable(init, history)
     }
     getState() {
         return this.present
@@ -43,7 +46,7 @@ class UnDoable {
         this.future = []
         return this
     }
-}
-export default (toUndo, history) => {
-    return new UnDoable(toUndo, history)
+    static toState(state) {
+        return { init: state.getState(), history: state.getHistory() }
+    }
 }

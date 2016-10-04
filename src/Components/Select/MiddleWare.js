@@ -1,5 +1,7 @@
 import GameLogic from '../Game/Logic.js';
 import { makeObj } from '../../Utils/Utils.js';
+import UnDoable from '../../Utils/UnDoable.js';
+
 export default function(data) {
 
     if ('update' in data) {
@@ -9,7 +11,8 @@ export default function(data) {
         const action = GameLogic.makeState(board[fro], fro, to)
 
         this.dispatchGame(action)
-            //this.state.game.saveCurState('game', a => makeObj(['init', 'history'], [a.getState(), a.getHistory()]))
+        console.log(UnDoable.toState)
+        this.state.game.saveCurState('game', UnDoable.toState)
 
     } else if ('put' in data) {
 

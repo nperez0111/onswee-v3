@@ -14,12 +14,19 @@ import SelectMiddleWare from '../Select/MiddleWare.js';
 export default class GameView extends Component {
     constructor(a) {
         super(a)
+
+        const handleUndo = a => {
+            const isInLocalStorage = a => 'init' in a
+
+            return UnDoable.new(isInLocalStorage(a) ? a.init : a, a.history)
+        }
+
         this.state = {
-            game: Storage.loadStateIntoNewStorage('game', Reducer, (a) => UnDoable('init' in a ? a.init : a, a.history), ({
+            game: Storage.loadStateIntoNewStorage('game', Reducer, handleUndo, {
                 board: (new Array(9)).fill(null),
                 turn: 1
-            })),
-            names: Storage.newStorage(NameReducer, UnDoable({
+            }),
+            names: Storage.newStorage(NameReducer, UnDoable.new({
                 player1: 'Player 1',
                 player2: 'Player 2'
             })),
