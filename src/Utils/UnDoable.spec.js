@@ -38,3 +38,6 @@ it('knows how to undo multiple times over', () => {
 it('knows how to go back and forth', () => {
     e(u(1).setState(2).undo().redo().getState()).toBe(2)
 })
+it('allows clearing of history', () => {
+    e(u(1).setState(2).clearHistory().undo()).toBe(false)
+})

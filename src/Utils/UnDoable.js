@@ -13,6 +13,11 @@ export default class UnDoable {
     getHistory() {
         return this.history
     }
+    clearHistory() {
+        this.history = []
+        this.future = []
+        return this
+    }
     undo() {
         if (this.history.length === 0) {
             return false
