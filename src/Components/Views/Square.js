@@ -32,10 +32,17 @@ export default class Square extends Component {
 
         return () => {
             let obj = makeObj(['type', 'selected'], ['select', position])
+
+            //if the current square is already selected do a move rather than a select
             if (selected) {
                 obj.type = 'move'
+                if (GameUtils.isExtraRulesRound(turn)) {
+                    obj.type = 'restricted_move'
+                }
             }
-            if (turn < GameUtils.Constants.placingRound) {
+
+
+            if (GameUtils.isPlacingRound(turn)) {
                 obj.type = 'put'
             }
             fn(obj)

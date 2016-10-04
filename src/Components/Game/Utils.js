@@ -36,4 +36,10 @@ export default class GameUtils extends Arrangements {
     static makeState(player, fro, to) {
         return makeObj(['player', 'from', 'to', 'type'], [player, fro, to, 'move'])
     }
+    static isPlacingRound(turn) {
+        return turn < this.Constants.placingRound
+    }
+    static isExtraRulesRound(turn) {
+        return turn < this.Constants.extraRulesRound
+    }
 }

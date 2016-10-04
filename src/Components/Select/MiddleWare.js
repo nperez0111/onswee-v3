@@ -4,26 +4,31 @@ import UnDoable from '../../Utils/UnDoable.js';
 
 export default function(data) {
 
-    if ('update' in data) {
-
+    if ('type' in data) {
         const board = this.state.game.getState().getState().board
-        const { fro, to } = data.update
-        const action = GameLogic.makeState(board[fro], fro, to)
+        var action;
+        switch (data.type) {
+            case 'move':
+            case 'restricted_move':
 
-        this.dispatchGame(action)
-        console.log(UnDoable.toState)
-        this.state.game.saveCurState('game', UnDoable.toState)
+                var { fro, to } = data.update
+                const player = board[fro]
+                action = GameLogic.makeState(player, fro, to)
 
-    } else if ('put' in data) {
+                this.dispatchGame(action)
+                this.state.game.saveCurState('game', UnDoable.toState)
+                break;
+            case 'put':
+                action = makeObj(['type', 'to'], ['put', data.put])
 
-        const action = makeObj(['type', 'to'], ['put', data.put])
-        const board = this.state.game.getState().getState().board
-
-        //make sure the position is not already filled otherwise ignore the event
-        if (GameLogic.isEmptyPos(data.put, board)) {
-            this.dispatchGame(action)
+                //make sure the position is not already filled otherwise ignore the event
+                if (GameLogic.isEmptyPos(data.put, board)) {
+                    this.dispatchGame(action)
+                }
+                break;
+            default:
+                GameLogic.trace(`Woa ${data.type} doesn't exist as an action to be caught by this middle ware!`)
+                break;
         }
-
     }
-
 }
