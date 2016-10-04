@@ -34,12 +34,24 @@ export default class GameView extends Component {
                 selected: null
             })
         }
+
+        //Pretty log for state change of select
         this.state.select.on('willChange', Storage.log('Before', undefined, "Select"))
         this.state.select.on('hasChanged', Storage.log('After', undefined, "Select"))
 
+        //Pretty log for state change of names
+        this.state.names.on('hasChanged', Storage.log('After', a => a.getState()))
+
+        /*/Pretty log for state change of game
+        this.state.game.on('hasChanged', Storage.log('After Move', a => '', "Game"))
+        this.state.game.on('hasChanged', a => { GameLogic.trackcurrent(a.getState().board) })
+        //*/
+
+
+
+        //Super Important Middle ware to propagate changes from select to game
         this.state.select.on('hasChanged', SelectMiddleWare.bind(this))
 
-        this.state.names.on('hasChanged', Storage.log('After', a => a.getState()))
         this.handleNameChange = this.handleNameChange.bind(this)
         this.stateChangeOf = this.stateChangeOf.bind(this)
         this.undoableMethod = this.undoableMethod.bind(this)
