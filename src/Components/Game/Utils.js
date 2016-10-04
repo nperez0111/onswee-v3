@@ -41,8 +41,8 @@ export default class GameUtils extends Arrangements {
             return cur === null;
         });
     }
-    static makeState(player, fro, to) {
-        return makeObj(['player', 'from', 'to', 'type'], [player, fro, to, 'move'])
+    static makeState(player, fro, to, type = 'move') {
+        return makeObj(['player', 'from', 'to', 'type'], [player, fro, to, type])
     }
     static isPlacingRound(turn) {
         return turn < this.Constants.placingRound

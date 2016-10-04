@@ -41,7 +41,7 @@ export default class GameLogic extends GameUtils {
     }
     static hypotheticalMoveInFromTo(player, board, fro, to) {
 
-        var boardy = board.slice(0);
+        const boardy = board.slice(0)
         boardy[fro] = null;
         boardy[to] = player;
         return boardy;

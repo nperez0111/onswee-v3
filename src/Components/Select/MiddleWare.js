@@ -3,17 +3,16 @@ import { makeObj } from '../../Utils/Utils.js';
 
 export default function(data) {
 
-    if ('type' in data) {
+    if ('emit' in data) {
         const board = this.state.game.getState().getState().board
         var action;
-        switch (data.type) {
+        switch (data.emit) {
             case 'move':
             case 'restricted_move':
 
-                var { fro, to } = data.update
+                const { fro, to } = data.update
                 const player = board[fro]
-                action = GameLogic.makeState(player, fro, to)
-                action.type = data.type
+                action = GameLogic.makeState(player, fro, to, data.emit)
                 this.dispatchGame(action)
                 break;
             case 'put':
@@ -25,7 +24,7 @@ export default function(data) {
                 }
                 break;
             default:
-                GameLogic.trace(`Woa ${data.type} doesn't exist as an action to be caught by this middle ware!`)
+                GameLogic.trace(`Woa ${data.emit} doesn't exist as an action to be caught by this middle ware!`)
                 break;
         }
     }
