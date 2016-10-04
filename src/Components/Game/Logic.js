@@ -1,6 +1,5 @@
 import GameUtils from './Utils.js';
-import Reducer from './Reducer.js';
-window.reducer = Reducer
+
 export default class GameLogic extends GameUtils {
     static isWinIn(player, board) {
         const positions = this.getPlayersPositions(player, board).sort();
