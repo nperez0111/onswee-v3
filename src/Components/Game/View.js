@@ -4,6 +4,7 @@ import Board from './Board.js';
 import GameLogic from './Logic.js';
 import PlayerHUD from '../Views/PlayerHUD.js';
 import TurnHUD from '../Views/TurnHUD.js';
+import { createStore } from 'redux';
 import Storage from '../../Utils/Storage.js';
 import Reducer from './Reducer.js';
 import NameReducer from './NameReducer.js';
@@ -27,14 +28,14 @@ export default class GameView extends Component {
                 player1: 'Player 1',
                 player2: 'Player 2'
             })),
-            select: Storage.new(SelectReducer, {
+            select: createStore(SelectReducer, {
                 selected: null
             })
         }
 
         //Pretty log for state change of select
-        this.state.select.on('willChange', Storage.log('Before', undefined, "Select"))
-        this.state.select.on('hasChanged', Storage.log('After', undefined, "Select"))
+        this.state.select.subscribe(() => Storage.log('Before', undefined, "Select")(this.state.select.getState()))
+            //this.state.select.on('hasChanged', Storage.log('After', undefined, "Select"))
 
         //Pretty log for state change of names
         this.state.names.on('hasChanged', Storage.log('After', a => a.getState()))
@@ -70,7 +71,10 @@ export default class GameView extends Component {
 
 
         //Super Important Middle ware to propagate changes from select to game
-        this.state.select.on('hasChanged', SelectMiddleWare.bind(this))
+        this.state.select.subscribe(() => {
+            const state = (this.state.select.getState());
+            SelectMiddleWare.call(this, state)
+        })
 
         this.handleNameChange = this.handleNameChange.bind(this)
         this.stateChangeOf = this.stateChangeOf.bind(this)
@@ -102,7 +106,7 @@ export default class GameView extends Component {
         return action => {
             const dispatch = this.state[ctx].dispatch(action)
 
-            this.setState(makeObj([ctx], [dispatch]))
+            this.setState(makeObj([ctx], [this.state[ctx]]))
             return dispatch
         }
     }
