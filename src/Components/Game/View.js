@@ -34,7 +34,7 @@ export default class GameView extends Component {
         }
 
         //Pretty log for state change of select
-        this.state.select.subscribe(() => Storage.log('Before', undefined, "Select")(this.state.select.getState()))
+        this.state.select.subscribe(() => Storage.log('After', undefined, "Select")(this.state.select.getState()))
             //this.state.select.on('hasChanged', Storage.log('After', undefined, "Select"))
 
         //Pretty log for state change of names
