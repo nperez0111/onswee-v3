@@ -55,7 +55,7 @@ export default class GameUtils extends Arrangements {
     }
     static getWinState(player) {
         const initialState = this.getInitialState()
-        return {...initialState, type: 'win', who: player }
+        return {...initialState, emit: 'win', who: player }
     }
     static getInitialState() {
         return { board: this.getEmptyBoard(), turn: 1 }

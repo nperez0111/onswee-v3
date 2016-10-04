@@ -52,8 +52,8 @@ export default class GameView extends Component {
         })
         this.state.game.on('hasChanged', state => {
             const action = state.getState()
-            if ('type' in action) {
-                switch (action.type) {
+            if ('emit' in action) {
+                switch (action.emit) {
                     case 'win':
                         {
                             alert(`Player ${action.who} won!`)
