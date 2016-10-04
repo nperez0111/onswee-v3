@@ -22,10 +22,7 @@ export default class GameView extends Component {
         }
 
         this.state = {
-            game: Storage.getFromLocalStorage('game', Reducer, handleUndo, {
-                board: (new Array(9)).fill(null),
-                turn: 1
-            }),
+            game: Storage.getFromLocalStorage('game', Reducer, handleUndo, GameLogic.getInitialState()),
             names: Storage.getFromLocalStorage('names', NameReducer, handleUndo, ({
                 player1: 'Player 1',
                 player2: 'Player 2'
@@ -42,6 +39,7 @@ export default class GameView extends Component {
         //Pretty log for state change of names
         this.state.names.on('hasChanged', Storage.log('After', a => a.getState()))
         this.state.names.on('hasChanged', function(state) {
+            //names shouldnt have to be undone actually
             this.saveCurState('names', UnDoable.toState)
         })
 
@@ -51,6 +49,22 @@ export default class GameView extends Component {
         //*/
         this.state.game.on('hasChanged', function(state) {
             this.saveCurState('game', UnDoable.toState)
+        })
+        this.state.game.on('hasChanged', state => {
+            const action = state.getState()
+            if ('type' in action) {
+                switch (action.type) {
+                    case 'win':
+                        {
+                            alert(`Player ${action.who} won!`)
+                            break
+                        }
+                    default:
+                        {
+                            console.warn("unhandled event")
+                        }
+                }
+            }
         })
 
 
