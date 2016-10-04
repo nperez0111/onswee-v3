@@ -8,6 +8,14 @@ export default class GameUtils extends Arrangements {
     static getPlayer(turn) {
         return ((turn - 1) % 2) + 1
     }
+    static getOtherPlayer(player) {
+        if (player === this.Constants.player1) {
+            return this.Constants.player2
+        } else if (player === this.Constants.player2) {
+            return this.Constants.player1
+        }
+        throw Error("Attempting to get opposite of:" + player)
+    }
     static getPlayersPositions(player, board) {
         return board.reduce((prev, cur, i) => {
             if (cur === player) {
@@ -41,5 +49,15 @@ export default class GameUtils extends Arrangements {
     }
     static isExtraRulesRound(turn) {
         return turn < this.Constants.extraRulesRound
+    }
+    static getEmptyBoard() {
+        return (new Array(9)).fill(null)
+    }
+    static getWinState(player) {
+        const initialState = this.getInitialState()
+        return {...initialState, type: 'win', who: player }
+    }
+    static getInitialState() {
+        return { board: this.getEmptyBoard(), turn: 1 }
     }
 }
