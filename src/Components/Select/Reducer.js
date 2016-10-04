@@ -21,8 +21,6 @@ export default function SelectReducer(state, action) {
             return { update: { fro: state.selected, to: action.selected, type: action.type }, type: action.type }
         case 'put':
             return { put: action.selected, type: action.type }
-            /*case 'restricted_move':
-                return {}*/
         default:
             return state
     }

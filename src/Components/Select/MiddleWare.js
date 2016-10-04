@@ -13,7 +13,7 @@ export default function(data) {
                 var { fro, to } = data.update
                 const player = board[fro]
                 action = GameLogic.makeState(player, fro, to)
-
+                action.type = data.type
                 this.dispatchGame(action)
                 break;
             case 'put':

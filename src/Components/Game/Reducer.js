@@ -11,17 +11,48 @@ const incrementTurn = (state) => {
 export default function Reducer(state, action) {
     const { turn, board } = state.getState()
     const addTurn = incrementTurn(state)
+    const { player, to } = action
+
     switch (action.type) {
         case 'move':
-            let { player, to } = action
-            if (playerFroTo(action) && Logic.canMoveFromTo(player, board, action.from, to)) {
+            {
 
-                return setState(state)({...addTurn, board: Logic.moveFromTo(player, board, action.from, to) })
+                if (playerFroTo(action) && Logic.canMoveFromTo(player, board, action.from, to)) {
+
+                    const postState = Logic.moveFromTo(player, board, action.from, to)
+
+                    if (Logic.isWinIn(player, postState)) {
+
+                        return setState(state)(Logic.getWinState(player)).clearHistory()
+
+                    }
+
+                    return setState(state)({...addTurn, board: postState })
+
+                }
+                break;
             }
-            return state
         case 'put':
-            return setState(state)({...addTurn, board: Logic.add(Logic.getPlayer(turn), board, action.to) })
+            {
+                return setState(state)({...addTurn, board: Logic.add(Logic.getPlayer(turn), board, action.to) })
+            }
+        case 'restricted_move':
+            {
+                if (Logic.canMoveFromTo(player, board, action.from, to)) {
+                    const postState = Logic.moveFromToWithRules(player, board, action.from, to)
+
+                    if (postState === false) {
+
+                        return setState(state)(Logic.getWinState(Logic.getOtherPlayer(player))).clearHistory()
+
+                    }
+
+                    return setState(state)({...addTurn, board: postState })
+                }
+                break;
+            }
         default:
             return state
     }
+    return state
 }
