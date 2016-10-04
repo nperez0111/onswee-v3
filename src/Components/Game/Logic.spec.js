@@ -30,3 +30,7 @@ it('knows the possible move locations', () => {
     e(g.getPossibleMoveLocs(3, b, 1)).toEqual([false, false, false, false, false, false, false, false, false])
     e(g.getPossibleMoveLocs(7, b, 1)).toEqual([false, false, false, false, false, false, false, false, true])
 })
+it('knows when there is an illegal line in the board', () => {
+    e(g.hasIllegalLineIn(1, w)).toBe(true)
+    e(g.hasIllegalLineIn(2, b)).toBe(true)
+})

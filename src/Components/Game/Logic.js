@@ -71,6 +71,32 @@ export default class GameLogic extends GameUtils {
         }
         return false;
     }
+    static hasIllegalLineIn(player, board) {
+        if (board.filter(c => {
+                return c === player
+            }).length > 3 || board.filter(c => {
+                return c === this.getOtherPlayer(player)
+            }).length > 3) {
+            //check for the off chance there are too many pieces
+            return true;
+        }
+        const illegals = this.winningArrangements.concat(this.illegalArrangements)
+
+        return illegals.some(possibleLocs => {
+            return possibleLocs.every(cur => this.hasPosIn(player, cur, board))
+        })
+    }
+    static moveFromToWithRules(player, board, fro, to) {
+        const postMove = this.moveFromTo(player, board, fro, to)
+        if (postMove === false) {
+            return false
+        }
+        if (this.hasIllegalLineIn(player, postMove)) {
+            return false
+        }
+        return postMove
+
+    }
     static changeBetween(prev, newy) {
         let ret = [];
 
