@@ -24,10 +24,10 @@ export default class GameView extends Component {
 
         this.state = {
             game: Storage.getFromLocalStorage('game', Reducer, handleUndo, GameLogic.getInitialState()),
-            names: Storage.getFromLocalStorage('names', NameReducer, handleUndo, ({
+            names: createStore(NameReducer, {
                 player1: 'Player 1',
                 player2: 'Player 2'
-            })),
+            }),
             select: createStore(SelectReducer, {
                 selected: null
             })
@@ -38,11 +38,8 @@ export default class GameView extends Component {
             //this.state.select.on('hasChanged', Storage.log('After', undefined, "Select"))
 
         //Pretty log for state change of names
-        this.state.names.on('hasChanged', Storage.log('After', a => a.getState()))
-        this.state.names.on('hasChanged', function(state) {
-            //names shouldnt have to be undone actually
-            this.saveCurState('names', UnDoable.toState)
-        })
+        this.state.names.subscribe(Storage.log('After', () => this.state.names.getState()))
+            //store names into local storage
 
         /*/Pretty log for state change of game
         this.state.game.on('hasChanged', Storage.log('After Move', a => '', "Game"))
@@ -82,7 +79,7 @@ export default class GameView extends Component {
     }
     render() {
         const { board, turn } = this.state.game.getState().getState()
-        const { player1, player2 } = this.state.names.getState().getState()
+        const { player1, player2 } = this.state.names.getState()
         const { selected } = this.state.select.getState()
         return (
             <div className='game-container'>
