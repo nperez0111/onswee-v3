@@ -12,6 +12,7 @@ import SelectReducer from '../Select/Reducer.js';
 import SelectMiddleWare from '../Select/MiddleWare.js';
 import onWin from './WinMiddleWare.js';
 import defaultState from './defaultState.js';
+import LocalStorage from '../../Utils/LocalStorage.js';
 
 export default class GameView extends Component {
     constructor(a) {
@@ -30,6 +31,9 @@ export default class GameView extends Component {
 
         this.state.store.subscribe(onWin.bind(this))
 
+        this.state.store.subscribe(() => {
+            LocalStorage.setObj('game', this.state.store.getState())
+        })
 
 
         //Super Important Middle ware to propagate changes from select to game

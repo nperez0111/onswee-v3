@@ -1,14 +1,20 @@
 import UnDoable from '../../Utils/UnDoable.js'
 import Logic from './Logic.js'
+import LocalStorage from '../../Utils/LocalStorage.js'
+const hydrate = (obj) => {
+    return {...obj, game: UnDoable.new(obj.game.present, obj.game.history, obj.game.future) }
+}
 const obj = {
         select: {
             selected: null
         },
         names: {
-            player1: "Player A",
-            player2: "Player B"
+            player1: "Player a",
+            player2: "Player 2"
         },
-        game: UnDoable.new(Logic.getInitialState())
+        game: {
+            present: Logic.getInitialState()
+        }
     }
     //load from localstorage here
-export default obj
+export default hydrate(LocalStorage.getObjWithDefault('game', obj))

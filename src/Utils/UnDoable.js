@@ -55,7 +55,4 @@ export default class UnDoable {
     setState(newState) {
         return UnDoable.new(newState, this.addToHistory(), [])
     }
-    static toObj(state) {
-        return { init: state.getState(), history: state.getHistory() }
-    }
 }
