@@ -11,6 +11,7 @@ import NameReducer from './NameReducer.js';
 import SelectReducer from '../Select/Reducer.js';
 import SelectMiddleWare from '../Select/MiddleWare.js';
 import onWin from './WinMiddleWare.js';
+import defaultState from './defaultState.js';
 
 export default class GameView extends Component {
     constructor(a) {
@@ -18,7 +19,7 @@ export default class GameView extends Component {
 
 
         this.state = {
-            store: createStore(combineReducers({ select: SelectReducer, names: NameReducer, game: Reducer }), window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__())
+            store: createStore(combineReducers({ select: SelectReducer, names: NameReducer, game: Reducer }), defaultState, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__())
         }
 
         window.store = this.state.store
