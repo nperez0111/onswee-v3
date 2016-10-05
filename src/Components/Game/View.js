@@ -24,13 +24,6 @@ export default class GameView extends Component {
 
         this.state = {
             game: Storage.getFromLocalStorage('game', Reducer, handleUndo, GameLogic.getInitialState()),
-            names: createStore(NameReducer, {
-                player1: 'Player 1',
-                player2: 'Player 2'
-            }),
-            select: createStore(SelectReducer, {
-                selected: null
-            }),
             store: createStore(combineReducers({ select: SelectReducer, names: NameReducer }))
         }
 
@@ -73,8 +66,9 @@ export default class GameView extends Component {
     }
     render() {
         const { board, turn } = this.state.game.getState().getState()
-        const { player1, player2 } = this.state.store.getState().names
-        const { selected } = this.state.store.getState().select
+        const { names, select } = this.state.store.getState()
+        const { player1, player2 } = names
+        const { selected } = select
         return (
             <div className='game-container'>
                 <TurnHUD turn={turn} player={GameLogic.getPlayer(turn)} playerNames={[player1,player2]} >
