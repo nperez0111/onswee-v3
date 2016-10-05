@@ -1,19 +1,23 @@
 import Logic from './Logic.js';
 import isInCorrectFormat, { is } from 'is-in-correct-format';
+import UnDoable from '../../Utils/UnDoable.js';
 
 const playerFroTo = (a) => isInCorrectFormat(a, { player: is.number, from: is.number, to: is.number })
-const setState = (state) => {
-    return (obj) => state.setState(obj)
-}
+
 const incrementTurn = (state) => {
     return { turn: state.getState().turn + 1 }
 }
-export default function Reducer(state, action) {
+
+export default function Reducer(state = UnDoable.new(Logic.getInitialState()), action) {
     const { turn, board } = state.getState()
     const addTurn = incrementTurn(state)
-    const { player, to } = action
+    const { to } = action
+    const player = Logic.getPlayer(turn)
 
     switch (action.type) {
+        case 'undo':
+        case 'redo':
+            return state[action.type]()
         case 'move':
             {
 
@@ -23,18 +27,23 @@ export default function Reducer(state, action) {
 
                     if (Logic.isWinIn(player, postState)) {
 
-                        return setState(state)(Logic.getWinState(player)).clearHistory()
+                        return state.setState(Logic.getWinState(player)).clearHistory()
 
                     }
 
-                    return setState(state)({...addTurn, board: postState })
+                    return state.setState({...addTurn, board: postState })
 
                 }
                 break;
             }
-        case 'put':
+        case 'reset_board':
             {
-                return setState(state)({...addTurn, board: Logic.add(Logic.getPlayer(turn), board, action.to) })
+                //reset board and forget all moves of the game just played
+                return UnDoable.new(Logic.getInitialState())
+            }
+        case 'add_to_board':
+            {
+                return state.setState({...addTurn, board: Logic.add(player, board, action.to) })
             }
         case 'restricted_move':
             {
@@ -43,11 +52,11 @@ export default function Reducer(state, action) {
 
                     if (postState === false) {
 
-                        return setState(state)(Logic.getWinState(Logic.getOtherPlayer(player))).clearHistory()
+                        return state.setState(Logic.getWinState(Logic.getOtherPlayer(player))).clearHistory()
 
                     }
 
-                    return setState(state)({...addTurn, board: postState })
+                    return state.setState({...addTurn, board: postState });
                 }
                 break;
             }

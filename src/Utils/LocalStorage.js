@@ -29,6 +29,9 @@ export default class LocalStorage {
         }
         return null;
     }
+    static getObjWithDefault(key, defaul = {}) {
+        return LocalStorage.getObj(key) || defaul
+    }
     static clear() {
         if (this.supportsLocalStorage()) {
             localStorage.clear();
