@@ -9,7 +9,7 @@ const obj = {
             selected: null
         },
         names: {
-            player1: "Player a",
+            player1: "Player 1",
             player2: "Player 2"
         },
         game: {
