@@ -23,7 +23,7 @@ export default function(data) {
                 this.dispatchGame(action)
                 break;
             case 'put':
-                action = makeObj(['type', 'to'], ['addToBoard', data.addToBoard])
+                action = makeObj(['type', 'to'], ['add_to_board', data.addToBoard])
 
                 //make sure the position is not already filled otherwise ignore the event
                 if (GameLogic.isEmptyPos(data.addToBoard, board)) {

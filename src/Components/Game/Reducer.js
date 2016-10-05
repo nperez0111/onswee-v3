@@ -36,7 +36,12 @@ export default function Reducer(state = UnDoable.new(Logic.getInitialState()), a
                 }
                 break;
             }
-        case 'addToBoard':
+        case 'reset_board':
+            {
+                //reset board and forget all moves of the game just played
+                return UnDoable.new(Logic.getInitialState())
+            }
+        case 'add_to_board':
             {
                 return state.setState({...addTurn, board: Logic.add(player, board, action.to) })
             }

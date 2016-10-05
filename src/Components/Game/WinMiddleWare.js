@@ -5,6 +5,7 @@ export default function WinMiddleWare() {
             case 'win':
                 {
                     alert(`Player ${action.who} won!`)
+                    this.dispatchGame({ type: 'reset_board' })
                     break
                 }
             default:
