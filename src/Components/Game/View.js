@@ -4,7 +4,7 @@ import Board from './Board.js';
 import GameLogic from './Logic.js';
 import PlayerHUD from '../Views/PlayerHUD.js';
 import TurnHUD from '../Views/TurnHUD.js';
-import { createStore } from 'redux';
+import { createStore, combineReducers } from 'redux';
 import Storage from '../../Utils/Storage.js';
 import Reducer from './Reducer.js';
 import NameReducer from './NameReducer.js';
@@ -30,21 +30,15 @@ export default class GameView extends Component {
             }),
             select: createStore(SelectReducer, {
                 selected: null
-            })
+            }),
+            store: createStore(combineReducers({ select: SelectReducer, names: NameReducer }))
         }
 
+        window.store = this.state.store
+
         //Pretty log for state change of select
-        this.state.select.subscribe(() => Storage.log('After', undefined, "Select")(this.state.select.getState()))
-            //this.state.select.on('hasChanged', Storage.log('After', undefined, "Select"))
+        this.state.store.subscribe(() => Storage.log('After', undefined)(this.state.store.getState()))
 
-        //Pretty log for state change of names
-        this.state.names.subscribe(Storage.log('After', () => this.state.names.getState()))
-            //store names into local storage
-
-        /*/Pretty log for state change of game
-        this.state.game.on('hasChanged', Storage.log('After Move', a => '', "Game"))
-        this.state.game.on('hasChanged', a => { GameLogic.trackcurrent(a.getState().board) })
-        //*/
         this.state.game.on('hasChanged', function(state) {
             this.saveCurState('game', UnDoable.toState)
         })
@@ -68,8 +62,8 @@ export default class GameView extends Component {
 
 
         //Super Important Middle ware to propagate changes from select to game
-        this.state.select.subscribe(() => {
-            const state = (this.state.select.getState());
+        this.state.store.subscribe(() => {
+            const state = this.state.store.getState().select
             SelectMiddleWare.call(this, state)
         })
 
@@ -79,15 +73,15 @@ export default class GameView extends Component {
     }
     render() {
         const { board, turn } = this.state.game.getState().getState()
-        const { player1, player2 } = this.state.names.getState()
-        const { selected } = this.state.select.getState()
+        const { player1, player2 } = this.state.store.getState().names
+        const { selected } = this.state.store.getState().select
         return (
             <div className='game-container'>
                 <TurnHUD turn={turn} player={GameLogic.getPlayer(turn)} playerNames={[player1,player2]} >
                     <button onClick={this.undoableMethod('undo','game')}>Undo</button> 
                     <button onClick={this.undoableMethod('redo','game')}>Redo</button>
                 </TurnHUD>
-                <Board board={board} turn={turn} onSelect={this.stateChangeOf('select')} selected={GameLogic.getPossibleMoveLocs(selected,board,turn)} />
+                <Board board={board} turn={turn} onSelect={this.stateChangeOf('store')} selected={GameLogic.getPossibleMoveLocs(selected,board,turn)} />
                 <PlayerHUD turn={turn} playerNames={[player1,player2]} onEdit={this.handleNameChange} />
             </div>
         )
@@ -113,7 +107,7 @@ export default class GameView extends Component {
     handleNameChange(id) {
         return e => {
             const newName = e.target.value
-            this.stateChangeOf('names')(makeObj(['id', 'name', 'type'], [id, newName, 'update']))
+            this.stateChangeOf('store')(makeObj(['id', 'name', 'type'], [id, newName, 'update']))
         }
     }
 }

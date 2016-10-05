@@ -1,4 +1,6 @@
-export default function SelectReducer(state, action) {
+export default function SelectReducer(state = {
+    selected: null
+}, action) {
 
     switch (action.type) {
         case 'select':
