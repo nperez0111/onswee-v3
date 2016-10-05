@@ -49,19 +49,20 @@ export default class GameView extends Component {
         return (
             <div className='game-container'>
                 <TurnHUD turn={turn} player={GameLogic.getPlayer(turn)} playerNames={[player1,player2]} >
-                    <button onClick={this.undoableMethod('undo','store')}>Undo</button> 
-                    <button onClick={this.undoableMethod('redo','store')}>Redo</button>
+                    <button onClick={this.undoableMethod('undo')}>Undo</button> 
+                    <button onClick={this.undoableMethod('redo')}>Redo</button>
                 </TurnHUD>
                 <Board board={board} turn={turn} onSelect={this.stateChangeOf('store')} selected={GameLogic.getPossibleMoveLocs(selected,board,turn)} />
                 <PlayerHUD turn={turn} playerNames={[player1,player2]} onEdit={this.handleNameChange} />
             </div>
         )
     }
-    undoableMethod(func, ctx) {
+    undoableMethod(func) {
         return () => {
-            const obj = this.state[ctx]
-            obj.getState()[func]()
-            this.setState(makeObj([ctx], [obj]))
+            const obj = this.state.store.getState()
+            console.log(obj)
+            obj.game[func]()
+            this.stateChangeOf('store')({ type: func })
         }
     }
     stateChangeOf(ctx) {

@@ -13,9 +13,12 @@ export default function Reducer(state = UnDoable.new(Logic.getInitialState()), a
     const addTurn = incrementTurn(state)
     const { to } = action
     const player = Logic.getPlayer(turn)
-    const addState = (newState) => UnDoable.new(newState, state.getHistory())
+    const addState = (newState) => UnDoable.new(newState, state.getHistory().concat(state.getState()), [])
 
     switch (action.type) {
+        case 'undo':
+        case 'redo':
+            return state[action.type]()
         case 'move':
             {
 
