@@ -10,6 +10,7 @@ import Reducer from './Reducer.js';
 import NameReducer from './NameReducer.js';
 import SelectReducer from '../Select/Reducer.js';
 import SelectMiddleWare from '../Select/MiddleWare.js';
+import onWin from './WinMiddleWare.js';
 
 export default class GameView extends Component {
     constructor(a) {
@@ -26,22 +27,7 @@ export default class GameView extends Component {
         this.state.store.subscribe(() => Storage.log('After', undefined)(this.state.store.getState()))
 
 
-        this.state.store.subscribe(() => {
-            const action = this.state.store.getState().game
-            if ('emit' in action) {
-                switch (action.emit) {
-                    case 'win':
-                        {
-                            alert(`Player ${action.who} won!`)
-                            break
-                        }
-                    default:
-                        {
-                            console.warn("unhandled event")
-                        }
-                }
-            }
-        })
+        this.state.store.subscribe(onWin.bind(this))
 
 
 
