@@ -13,7 +13,6 @@ export default function Reducer(state = UnDoable.new(Logic.getInitialState()), a
     const addTurn = incrementTurn(state)
     const { to } = action
     const player = Logic.getPlayer(turn)
-    const addState = (newState) => UnDoable.new(newState, state.getHistory().concat(state.getState()), [])
 
     switch (action.type) {
         case 'undo':
@@ -28,18 +27,18 @@ export default function Reducer(state = UnDoable.new(Logic.getInitialState()), a
 
                     if (Logic.isWinIn(player, postState)) {
 
-                        return addState(Logic.getWinState(player)).clearHistory()
+                        return state.setState(Logic.getWinState(player)).clearHistory()
 
                     }
 
-                    return addState({...addTurn, board: postState })
+                    return state.setState({...addTurn, board: postState })
 
                 }
                 break;
             }
         case 'addToBoard':
             {
-                return addState({...addTurn, board: Logic.add(player, board, action.to) })
+                return state.setState({...addTurn, board: Logic.add(player, board, action.to) })
             }
         case 'restricted_move':
             {
@@ -48,11 +47,11 @@ export default function Reducer(state = UnDoable.new(Logic.getInitialState()), a
 
                     if (postState === false) {
 
-                        return addState(Logic.getWinState(Logic.getOtherPlayer(player))).clearHistory()
+                        return state.setState(Logic.getWinState(Logic.getOtherPlayer(player))).clearHistory()
 
                     }
 
-                    return addState({...addTurn, board: postState });
+                    return state.setState({...addTurn, board: postState });
                 }
                 break;
             }
