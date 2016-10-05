@@ -22,7 +22,7 @@ export default function SelectReducer(state = {
         case 'restricted_move':
             return { update: { fro: state.selected, to: action.selected, type: action.type }, emit: action.type }
         case 'put':
-            return { put: action.selected, emit: action.type }
+            return { addToBoard: action.selected, emit: action.type }
         default:
             return state
     }

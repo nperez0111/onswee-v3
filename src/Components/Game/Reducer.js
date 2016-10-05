@@ -1,17 +1,19 @@
 import Logic from './Logic.js';
 import isInCorrectFormat, { is } from 'is-in-correct-format';
+import UnDoable from '../../Utils/UnDoable.js';
 
 const playerFroTo = (a) => isInCorrectFormat(a, { player: is.number, from: is.number, to: is.number })
-const setState = (state) => {
-    return (obj) => state.setState(obj)
-}
+
 const incrementTurn = (state) => {
     return { turn: state.getState().turn + 1 }
 }
-export default function Reducer(state, action) {
+
+export default function Reducer(state = UnDoable.new(Logic.getInitialState()), action) {
     const { turn, board } = state.getState()
     const addTurn = incrementTurn(state)
-    const { player, to } = action
+    const { to } = action
+    const player = Logic.getPlayer(turn)
+    const addState = (newState) => UnDoable.new(newState, state.getHistory())
 
     switch (action.type) {
         case 'move':
@@ -23,18 +25,18 @@ export default function Reducer(state, action) {
 
                     if (Logic.isWinIn(player, postState)) {
 
-                        return setState(state)(Logic.getWinState(player)).clearHistory()
+                        return addState(Logic.getWinState(player)).clearHistory()
 
                     }
 
-                    return setState(state)({...addTurn, board: postState })
+                    return addState({...addTurn, board: postState })
 
                 }
                 break;
             }
-        case 'put':
+        case 'addToBoard':
             {
-                return setState(state)({...addTurn, board: Logic.add(Logic.getPlayer(turn), board, action.to) })
+                return addState({...addTurn, board: Logic.add(player, board, action.to) })
             }
         case 'restricted_move':
             {
@@ -43,11 +45,11 @@ export default function Reducer(state, action) {
 
                     if (postState === false) {
 
-                        return setState(state)(Logic.getWinState(Logic.getOtherPlayer(player))).clearHistory()
+                        return addState(Logic.getWinState(Logic.getOtherPlayer(player))).clearHistory()
 
                     }
 
-                    return setState(state)({...addTurn, board: postState })
+                    return addState({...addTurn, board: postState });
                 }
                 break;
             }
