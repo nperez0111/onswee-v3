@@ -11,10 +11,16 @@ export default class UnDoable {
         return this.present
     }
     getHistory() {
-        return this.history
+        return this.history.slice(0)
     }
     getFuture() {
-        return this.future
+        return this.future.slice(0)
+    }
+    addToHistory() {
+        return this.getHistory().concat(this.getState())
+    }
+    addToFuture() {
+        return this.getFuture().concat(this.getState())
     }
     clearHistory() {
         this.history = []
@@ -25,20 +31,18 @@ export default class UnDoable {
         if (this.history.length === 0) {
             return this
         }
-        const history = this.history.slice(0)
-        const newState = history.pop()
-        const future = this.future.concat(this.present)
-        const present = newState
+        const history = this.getHistory()
+        const present = history.pop()
+        const future = this.addToFuture()
         return UnDoable.new(present, history, future)
     }
     redo() {
         if (this.future.length === 0) {
             return this
         }
-        const future = this.future.slice(0)
-        const oldState = future.pop()
-        const history = this.history.concat(this.present)
-        const present = oldState
+        const future = this.getFuture()
+        const present = future.pop()
+        const history = this.addToHistory()
         return UnDoable.new(present, history, future)
     }
     revert(howManyTimes) {
@@ -49,10 +53,7 @@ export default class UnDoable {
         return (new Array(howManyTimes - 1)).fill(false).reduce(prev => prev.undo(), this.undo())
     }
     setState(newState) {
-        this.history.push(this.present)
-        this.present = newState
-        this.future = []
-        return this
+        return UnDoable.new(newState, this.addToHistory(), [])
     }
     static toObj(state) {
         return { init: state.getState(), history: state.getHistory() }
