@@ -19,8 +19,9 @@ export default function(data) {
                 if (!validGameObj(action)) {
                     return
                 }
-                this.dispatchGame({ type: 'deselect' })
+
                 this.dispatchGame(action)
+                this.dispatchGame({ type: 'deselect' })
                 break;
             case 'put':
                 action = makeObj(['type', 'to'], ['add_to_board', data.addToBoard])
