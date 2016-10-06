@@ -27,7 +27,9 @@ export default function(data) {
 
                 //make sure the position is not already filled otherwise ignore the event
                 if (GameLogic.isEmptyPos(data.addToBoard, board)) {
+
                     this.dispatchGame(action)
+                    this.dispatchGame({ type: 'deselect' })
                 }
                 break;
             default:
