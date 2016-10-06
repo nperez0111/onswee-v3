@@ -13,7 +13,7 @@ import SelectMiddleWare from '../Select/MiddleWare.js';
 import onWin from './WinMiddleWare.js';
 import defaultState from './defaultState.js';
 import LocalStorage from '../../Utils/LocalStorage.js';
-
+import Notifications from 'react-notify-toast';
 export default class GameView extends Component {
     constructor(a) {
         super(a)
@@ -53,6 +53,7 @@ export default class GameView extends Component {
         const { selected } = select
         return (
             <div className='game-container'>
+                <Notifications />
                 <TurnHUD turn={turn} player={GameLogic.getPlayer(turn)} playerNames={[player1,player2]} >
                     <button onClick={this.undoableMethod('undo')}>Undo</button> 
                     <button onClick={this.undoableMethod('redo')}>Redo</button>
