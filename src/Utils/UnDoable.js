@@ -23,9 +23,7 @@ export default class UnDoable {
         return this.getFuture().concat(this.getState())
     }
     clearHistory() {
-        this.history = []
-        this.future = []
-        return this
+        return UnDoable.new(this.getState())
     }
     undo() {
         if (this.history.length === 0) {
