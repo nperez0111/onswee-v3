@@ -58,6 +58,15 @@ export default class GameUtils extends Arrangements {
         return {...initialState, emit: 'win', who: player }
     }
     static getInitialState() {
-        return { board: this.getEmptyBoard(), turn: 1 }
+        return {
+            board: this.getEmptyBoard(),
+            turn: 1
+        }
+    }
+    static rotateBoard(board, howManyTimes = 0,matrix=this.rotateBoardRight) {
+        if (howManyTimes > 1) {
+            board = rotateBoard(board, howManyTimes-1, matrix)
+        }
+        return matrix.map( (cur, i) =>  board[i + cur] )
     }
 }

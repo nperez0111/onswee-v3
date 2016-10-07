@@ -192,4 +192,8 @@ export default class Arrangements extends Loggings {
         ] //end of side traps
     ];
     static Constants = Constants;
+    //rotates board clockwise
+    static rotateBoardRight = [6, 2, -2, -4, 0, 4, 2, -2, -6];
+    //rotates board counterClockwise
+    static rotateBoardLeft = [2, 4, 6, -2, 0, 2, -6, -4, -2];
 }
