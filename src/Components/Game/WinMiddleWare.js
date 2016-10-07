@@ -9,6 +9,7 @@ export default function WinMiddleWare() {
                 {
                     notify.show(<div className='notification-wrap'><PlayerPiece isActive={true} player={action.who} /> { `Player ${action.who} won!` }</div>)
                     this.dispatchGame({ type: 'reset_board' })
+                    this.dispatchGame({ type: 'deselect' })
                     break
                 }
             default:
