@@ -4,9 +4,20 @@ export default class AIUtils extends Logic {
     static rotateBoard(board, howManyTimes = 0, matrix = this.rotateBoardRight) {
         //DOES NOT WORK WTF
         if (howManyTimes > 1) {
-            board = rotateBoard(board, howManyTimes - 1, matrix)
+            board = this.rotateBoard(board, howManyTimes - 1, matrix)
         }
         return matrix.map((cur, i) => board[i + cur])
+    }
+    static twoBoardEqual(board1, board2) {
+        return board1.every(c => c == board2[c])
+    }
+    static twoBoardEquivalent(board1, board2) {
+        if (this.twoBoardEqual(board1, board2)) {
+            return true
+        }
+        return this.boardOrientations.some(board => {
+            return this.twoBoardEqual(board1, this.rotateBoard(board2, 1, board))
+        })
     }
     static isWinInForOtherPlayer(player, board) {
         return this.isWinIn(this.getOtherPlayer(player), board)
@@ -41,9 +52,9 @@ export default class AIUtils extends Logic {
 
         return val || defaultValue
     }
-    static addtoBoard(player, board) {
+    static addToBoard(player, board) {
         const boardRankings = [4, 1, 3, 5, 7, 0, 2, 6, 8]
 
-        return this.retRes(boardRankings, cur => this.isEmptyPos(cur, board))
+        return ['ADD', this.retRes(boardRankings, cur => this.isEmptyPos(cur, board) && cur)]
     }
 }

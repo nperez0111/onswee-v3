@@ -1,6 +1,16 @@
 import Loggings from './Loggings.js';
 import Constants from './Constants.js';
 
+const flips = {
+    rotateBoardRight: [6, 2, -2, 4, 0, -4, 2, -2, -6],
+    rotateBoardLeft: [2, 4, 6, -2, 0, 2, -6, -4, -2],
+    flipHorizontal: [2, 0, -2, 2, 0, -2, 2, 0, -2],
+    flipVertical: [6, 6, 6, 0, 0, 0, -6, -6, -6],
+    flipTopRight: [8, 4, 0, 4, 0, -4, 0, -4, -8],
+    flipTopLeft: [0, 2, 4, -2, 0, 2, -4, -2, 0],
+    rotateBoardRightTwice: [8, 6, 4, 2, 0, -2, -4, -6, -8]
+}
+
 export default class Arrangements extends Loggings {
     static illegalMovements = [
         [2, 5, 6, 7, 8],
@@ -193,7 +203,12 @@ export default class Arrangements extends Loggings {
     ];
     static Constants = Constants;
     //rotates board clockwise
-    static rotateBoardRight = [6, 2, -2, -4, 0, 4, 2, -2, -6];
+    static rotateBoardRight = flips.rotateBoardRight;
     //rotates board counterClockwise
-    static rotateBoardLeft = [2, 4, 6, -2, 0, 2, -6, -4, -2];
+    static rotateBoardLeft = flips.rotateBoardLeft;
+    static flipHorizontal = flips.flipHorizontal;
+    static flipVertical = flips.flipVertical;
+    static flipTopRight = flips.flipTopRight;
+    static flipTopLeft = flips.flipTopLeft;
+    static boardOrientations = Object.keys(flips).map(c => flips[c])
 }
