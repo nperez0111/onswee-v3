@@ -62,9 +62,7 @@ export default class GameLogic extends GameUtils {
             if (this.hasPosIn(player, fro, board)) {
 
                 //check if we can move to that position
-                if ((fro === this.center || this.allPosMoveLocs[fro].some(a => {
-                        return a === to
-                    }))) {
+                if (fro === this.center || this.allPosMoveLocs[fro].some(a => a === to)) {
                     return true;
                 }
             }
@@ -72,11 +70,7 @@ export default class GameLogic extends GameUtils {
         return false;
     }
     static hasIllegalLineIn(player, board) {
-        if (board.filter(c => {
-                return c === player
-            }).length > 3 || board.filter(c => {
-                return c === this.getOtherPlayer(player)
-            }).length > 3) {
+        if (board.filter(c => c === player).length > 3 || board.filter(c => c === this.getOtherPlayer(player)).length > 3) {
             //check for the off chance there are too many pieces
             return true;
         }

@@ -6,6 +6,10 @@ export default class GameUtils extends Arrangements {
         return player === this.getPlayer(turn)
     }
     static getPlayer(turn) {
+        if (turn < 1) {
+            throw Error("Woa Turns start at 1 buddy")
+            return 0
+        }
         return ((turn - 1) % 2) + 1
     }
     static getOtherPlayer(player) {
@@ -62,11 +66,5 @@ export default class GameUtils extends Arrangements {
             board: this.getEmptyBoard(),
             turn: 1
         }
-    }
-    static rotateBoard(board, howManyTimes = 0,matrix=this.rotateBoardRight) {
-        if (howManyTimes > 1) {
-            board = rotateBoard(board, howManyTimes-1, matrix)
-        }
-        return matrix.map( (cur, i) =>  board[i + cur] )
     }
 }
