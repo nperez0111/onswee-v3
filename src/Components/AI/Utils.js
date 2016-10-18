@@ -2,7 +2,6 @@ import Logic from '../Game/Logic.js'
 
 export default class AIUtils extends Logic {
     static rotateBoard(board, howManyTimes = 0, matrix = this.rotateBoardRight) {
-        //DOES NOT WORK WTF
         if (howManyTimes > 1) {
             board = this.rotateBoard(board, howManyTimes - 1, matrix)
         }
@@ -11,7 +10,7 @@ export default class AIUtils extends Logic {
     static twoBoardEqual(board1, board2) {
         return board1.every(c => c == board2[c])
     }
-    static twoBoardEquivalent(board1, board2) {
+    static areBoardsEqual(board1, board2) {
         if (this.twoBoardEqual(board1, board2)) {
             return true
         }
