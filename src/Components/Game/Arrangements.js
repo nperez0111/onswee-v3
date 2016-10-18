@@ -62,7 +62,10 @@ export default class Arrangements extends Loggings {
 
     static center = 4;
     //center being the best position to have when playing
-
+    static pairCompleting = [
+        4, 4, 4, 4, 8, 0, 7, 1, 6, 2, 3, 5
+    ];
+    //corresponds to pairarrangements to show what is being completed
     static pairArrangements = [
         [0, 8],
         [1, 7],

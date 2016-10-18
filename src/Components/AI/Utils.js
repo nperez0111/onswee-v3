@@ -57,55 +57,45 @@ export default class AIUtils extends Logic {
     static isWinInForOtherPlayer(player, board) {
         return this.isWinIn(this.getOtherPlayer(player), board)
     }
-    static hasPossibleLineIn(player, board) {
+    static hasPossibleLineIn(player, board, retToBeBool = true) {
         const hasBothPos = arr => this.hasPosIn(player, arr[0], board) && this.hasPosIn(player, arr[1], board)
+        const whichToCheck = i => this.hasCenterIn(player, board) ? i > 3 : i < 4
 
-        let hasCenter = false;
-        if (this.hasCenterIn(player, board)) {
-            //if hascenter do easy computation;
-            hasCenter = this.retRes(this.pairArrangements.filter((c, i) => {
-                return i > 3;
-            }), (cur, i) => {
-                const offset = 4 + i;
-                if (hasBothPos(cur)) {
-
-                    if (this.isEmptyPos(this.pairArrangements[-2 * (offset % 2) + offset + 1][-2 * (offset % 2) + 1], board)) {
-
-                        return offset
-
-                    }
-
-                }
-
-            }, null)
-
+        const result = this.pairArrangements.map((c, i) => whichToCheck(i) && hasBothPos(c) && i).filter(a => a !== false)
+        if (result.length === 0) {
+            return false
         }
+        return retToBeBool ? true : result
+            //returns the indices of pairarrangement that have pieces on those positions
 
-        const ret = this.retRes(this.pairArrangements, (cur, i) => {
-            if (hasBothPos(cur)) {
-                return i;
-            }
-        }, null);
-        return hasCenter === null ? false : hasCenter || ret === null ? 12 : ret;
 
     }
 
-    static isAbleToWin(player, board) {
+    static isAbleToWin(player, board, retToBeBool = true) {
 
-        const pairArrOutPut = this.hasPossibleLineIn(player, board)
-
-        const hasFinalPieceToMoveIn = () => this.hasPosIn(player, this.pairCompleter[pairArrOutPut][0], board) || this.hasPosIn(player, this.pairCompleter[pairArrOutPut][1], board)
-            //this.log( pairArrOutPut );
-        if (pairArrOutPut == 12) {
+        const indexes = this.hasPossibleLineIn(player, board, false)
+        const hasFinalPieceToMoveIn = i => this.hasPosIn(player, this.pairCompleter[i][0], board) || this.hasPosIn(player, this.pairCompleter[i][1], board)
+        const checkPairCompleter = index => this.isEmptyPos(this.pairCompleting[index], board)
+        const resp = (fro, i) => [fro, this.pairCompleting[i]]
+        if (indexes === false) {
             return false
-        } else if (this.hasCenterIn(null, board) && (pairArrOutPut < 4)) {
-            return true
-        } else if (pairArrOutPut > 3 && hasFinalPieceToMoveIn() &&
-            this.isEmptyPos(this.pairArrangements[pairArrOutPut + (-2 * (pairArrOutPut % 2) + 1)][(-1 * (pairArrOutPut % 2)) + 1], board)) {
-
-            return true;
         }
-        return false;
+        return this.returnResponse(indexes, index => {
+            if (index < 4) {
+                if (this.hasCenterIn(null, board)) {
+                    return retToBeBool ? true : resp(this.center, index)
+                }
+            }
+            if (index > 3) {
+                if (hasFinalPieceToMoveIn(index) && checkPairCompleter(index)) {
+
+                    const completer = this.pairCompleter[index]
+
+                    return retToBeBool ? true : this.hasPosIn(player, completer[0], board) ? resp(completer[0], index) : resp(completer[1], index);
+                }
+                return false
+            }
+        }, false)
 
     }
 }
