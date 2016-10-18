@@ -26,15 +26,15 @@ export default class AIUtils extends Logic {
         /*
                 let move = []
                 this.getPlayersPositions(player, board).some(fro => {
-                    return this.retRes(baord, to => this.canMoveFromTo(player, board, fro, to) ? [fro, to] : false)
+                    return this.returnResponse(baord, to => this.canMoveFromTo(player, board, fro, to) ? [fro, to] : false)
                 })
 
                 return move*/
         const positions = this.getPlayersPositions(player, board)
-        return this.retRes(positions, fro => this.retRes(board, to => this.canMoveFromTo(player, board, fro, to) && [fro, to]))
+        return this.returnResponse(positions, fro => this.returnResponse(board, to => this.canMoveFromTo(player, board, fro, to) && [fro, to]))
 
     }
-    static retRes(arr, func, defaultValue = false) {
+    static returnResponse(arr, func, defaultValue = false) {
         let val = false
         arr.some((cur, i) => {
 
@@ -55,6 +55,6 @@ export default class AIUtils extends Logic {
     static addToBoard(player, board) {
         const boardRankings = [4, 1, 3, 5, 7, 0, 2, 6, 8]
 
-        return ['ADD', this.retRes(boardRankings, cur => this.isEmptyPos(cur, board) && cur)]
+        return ['ADD', this.returnResponse(boardRankings, cur => this.isEmptyPos(cur, board) && cur)]
     }
 }

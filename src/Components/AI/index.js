@@ -40,7 +40,7 @@ export default class AI extends AIUtils {
             then: this.justMoveAnywhere
         }]
 
-        return this.retRes(options, option => option.is(player, board) && option.then(player, board), [null, null])
+        return this.returnResponse(options, option => option.is(player, board) && option.then(player, board), [null, null])
     }
 
 }
