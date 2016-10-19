@@ -27,10 +27,10 @@ export default class AI extends AIUtils {
             is: player => this.isExtraRulesRound(player),
             then: this.moveWithExtraRules
         }, {
-            is: this.isWinIn,
+            is: this.isAbleToWin,
             then: this.takeTheWin
         }, {
-            is: this.isWinInForOtherPlayer,
+            is: this.isAbleToBlock,
             then: this.blockOtherPlayer
         }, {
             is: true,
@@ -41,6 +41,9 @@ export default class AI extends AIUtils {
         }]
 
         return this.returnResponse(options, option => option.is(player, board) && option.then(player, board), [null, null])
+    }
+    takeTheWin(player, board) {
+
     }
 
 }

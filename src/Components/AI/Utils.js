@@ -71,9 +71,9 @@ export default class AIUtils extends Logic {
 
     }
 
-    static isAbleToWin(player, board, retToBeBool = true) {
+    static isAbleToWin(player, board, retToBeBool = true, useOtherPlayer = false) {
 
-        const indexes = this.hasPossibleLineIn(player, board, false)
+        const indexes = this.hasPossibleLineIn(useOtherPlayer ? this.getOtherPlayer(player) : player, board, false)
         const hasFinalPieceToMoveIn = i => this.hasPosIn(player, this.pairCompleter[i][0], board) || this.hasPosIn(player, this.pairCompleter[i][1], board)
         const checkPairCompleter = index => this.isEmptyPos(this.pairCompleting[index], board)
         const resp = (fro, i) => [fro, this.pairCompleting[i]]
@@ -97,5 +97,15 @@ export default class AIUtils extends Logic {
             }
         }, false)
 
+    }
+    static takeTheWin(player, board) {
+        return this.isAbleToWin(player, board, false)
+    }
+    static isAbleToBlock(player, board, retToBeBool = true) {
+        const posToBlock = this.isAbleToWin((player), board, false, true)
+        return retToBeBool ? posToBlock !== false : posToBlock
+    }
+    static blockTheOtherPlayer(player, board) {
+        return this.isAbleToBlock(player, board, false)
     }
 }

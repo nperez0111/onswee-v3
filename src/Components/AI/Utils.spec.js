@@ -41,8 +41,13 @@ it('knows when there is a possible line', () => {
     e(g.hasPossibleLineIn(2, [1, null, 2, 1, 2, null, 1, 2, null], false)).toEqual([7, 8])
 
 })
-it('knows when that line can be completed', () => {
+it('knows when a line can be completed', () => {
     e(g.isAbleToWin(2, [1, 1, 2, 1, 2, null, null, 2, null])).toBe(true)
     e(g.isAbleToWin(2, [null, 1, 2, 1, 2, null, 1, 2, null])).toBe(false)
     e(g.isAbleToWin(2, [1, 1, 2, 1, 2, null, null, 2, null], false)).toEqual([7, 6])
+})
+it('knows when a line can be blocked', () => {
+
+    e(g.isAbleToBlock(1, [1, 1, 2, 1, 2, null, null, 2, null])).toBe(true)
+    e(g.isAbleToBlock(1, [1, 1, 2, 1, 2, null, null, 2, null], false)).toEqual([3, 6])
 })
