@@ -2,7 +2,7 @@ import AIUtils from './Utils.js'
 
 export default class AI extends AIUtils {
 
-    generateMoves(player, board, turnBool) {
+    static generateMoves(player, board, turnBool) {
         return this.trimArrangements(player, this.getPlayerPositions(player, board).map(fro => {
             return this.allPosMoveLocs[fro].filter(to => {
                 return this.canMoveFromTo(player, board, fro, to);
@@ -12,14 +12,13 @@ export default class AI extends AIUtils {
         }).reduce((prev, newy) => prev.concat(newy), []), turnBool)
 
     }
-    trimArrangements(player, boards, turnBool = false) {
-        if (!turnBool) {
-            //At this rate it doesnt matter all that much
-            return boards
-        }
-        return boards.filter(board => turnBool && this.hasIllegalLineIn(player, board))
+    static trimArrangements(player, boards, turnBool = false) {
+        return boards.filter((board, i) => {
+
+            return turnBool && boards.slice(i).some(other => this.areBoardsEqual(board, other)) && this.hasIllegalLineIn(player, board)
+        })
     }
-    decideMoveToTake(player, board) {
+    static decideMoveToTake(player, board) {
         const options = [{
             is: player => this.isPlacingRound(player),
             then: this.addToBoard
@@ -41,9 +40,6 @@ export default class AI extends AIUtils {
         }]
 
         return this.returnResponse(options, option => option.is(player, board) && option.then(player, board), [null, null])
-    }
-    takeTheWin(player, board) {
-
     }
 
 }
