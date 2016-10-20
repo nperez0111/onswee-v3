@@ -2,7 +2,7 @@ import AIUtils from './Utils.js'
 
 export default class AI extends AIUtils {
 
-    static generateMoves(player, board, turnBool) {
+    static generateMoves(player, board, turnBool = false) {
         return this.trimArrangements(player, this.getPlayersPositions(player, board).map(fro => {
             return this.allPosMoveLocs[fro].filter(to => {
                 return this.canMoveFromTo(player, board, fro, to);
