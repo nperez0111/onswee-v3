@@ -48,4 +48,15 @@ export default class AI extends AIUtils {
         return this.returnResponse(options, option => option.is(player, board) && option.then(player, board), [null, null])
     }
 
+    static pickBestMove(player, board) {
+
+    }
+    static rankBoard(player, board) {
+
+    }
+    static sortBoardByRanking(player, board1, board2) {
+        //Assuming they are numbers
+        return this.rankBoard(player, board1) - this.rankBoard(player, board2)
+    }
+
 }
