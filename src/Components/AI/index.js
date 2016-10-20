@@ -3,7 +3,7 @@ import AIUtils from './Utils.js'
 export default class AI extends AIUtils {
 
     static generateMoves(player, board, turnBool) {
-        return this.trimArrangements(player, this.getPlayerPositions(player, board).map(fro => {
+        return this.trimArrangements(player, this.getPlayersPositions(player, board).map(fro => {
             return this.allPosMoveLocs[fro].filter(to => {
                 return this.canMoveFromTo(player, board, fro, to);
             }).map(to => {
@@ -15,7 +15,7 @@ export default class AI extends AIUtils {
     static trimArrangements(player, boards, turnBool = false) {
         return boards.filter((board, i) => {
 
-            return turnBool && boards.slice(i).some(other => this.areBoardsEqual(board, other)) && this.hasIllegalLineIn(player, board)
+            return (turnBool && this.hasIllegalLineIn(player, board)) || boards.slice(i).some(other => this.areBoardsEqual(board, other))
         })
     }
     static decideMoveToTake(player, board) {
