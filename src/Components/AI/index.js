@@ -15,7 +15,7 @@ export default class AI extends AIUtils {
     static trimArrangements(player, boards, turnBool = false) {
         return boards.filter((board, i) => {
 
-            return (turnBool && this.hasIllegalLineIn(player, board)) || boards.slice(i).some(other => this.areBoardsEqual(board, other))
+            return /*(turnBool && this.hasIllegalLineIn(player, board)) ||*/ !boards.slice(i + 1).some(other => this.areBoardsEqual(board, other))
         })
     }
     static decideMoveToTake(player, board) {

@@ -34,6 +34,7 @@ it('knows when two boards are equivalent', () => {
     e(g.areBoardsEqual(g.rotateBoard(g.rotateBoard(b, 1, g.flipHorizontal)), b)).toBe(true)
     e(g.areBoardsEqual(g.rotateBoard(g.rotateBoard(b, 1, g.flipVertical), 2), b)).toBe(true)
     e(g.areBoardsEqual(g.rotateBoard(g.rotateBoard(b, 1, g.flipVertical), 1, g.flipTopLeft), b)).toBe(true)
+    e(g.areBoardsEqual(g.rotateBoard(b), w)).toBe(false)
 })
 
 it('knows when there is a possible line', () => {
