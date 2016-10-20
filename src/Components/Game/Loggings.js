@@ -29,6 +29,7 @@ export default class Loggings {
 
         this.logger(whosturn.split("").fill('_').join(""));
         this.logger(bro, brt, br, whosturn.split("").fill('‾').join(""));
+        return board
     }
     static logAll = true;
 
