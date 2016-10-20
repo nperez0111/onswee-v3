@@ -8,7 +8,6 @@ export default class GameUtils extends Arrangements {
     static getPlayer(turn) {
         if (turn < 1) {
             throw Error("Woa Turns start at 1 buddy")
-            return 0
         }
         return ((turn - 1) % 2) + 1
     }
