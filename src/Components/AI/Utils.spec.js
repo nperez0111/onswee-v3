@@ -52,3 +52,7 @@ it('knows when a line can be blocked', () => {
     e(g.isAbleToBlock(1, [1, 1, 2, 1, 2, null, null, 2, null])).toBe(true)
     e(g.isAbleToBlock(1, [1, 1, 2, 1, 2, null, null, 2, null], false)).toEqual([3, 6])
 })
+
+it('knows how to just move anywhere', () => {
+    e(g.justMoveAnywhere(1, [2, 2, 1, 2, 1, 2, null, 2, 1])).toEqual([4, 6])
+})

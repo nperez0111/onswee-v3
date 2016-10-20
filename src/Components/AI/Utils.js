@@ -19,16 +19,9 @@ export default class AIUtils extends Logic {
         })
     }
     static justMoveAnywhere(player, board) {
-        /*
-                let move = []
-                this.getPlayersPositions(player, board).some(fro => {
-                    return this.returnResponse(baord, to => this.canMoveFromTo(player, board, fro, to) ? [fro, to] : false)
-                })
-
-                return move*/
         const positions = this.getPlayersPositions(player, board)
-        return this.returnResponse(positions, fro => this.returnResponse(board, to => this.canMoveFromTo(player, board, fro, to) && [fro, to]))
 
+        return this.returnResponse(positions, fro => this.returnResponse(board, (c, to) => this.canMoveFromTo(player, board, this.logger(fro), this.logger(to)) && [fro, to]))
     }
     static returnResponse(arr, func, defaultValue = false) {
         let val = false

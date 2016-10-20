@@ -13,7 +13,6 @@ it('knows all the possible boards that can be generated for a player', () => {
 it('knows how to trim two arrangements which are equivalent', () => {
     e(g.trimArrangements(1, [g.rotateBoard(b), b])).toEqual([b])
     e(g.trimArrangements(1, [g.rotateBoard(b, 2), g.rotateBoard(b, 3), b])).toEqual([b])
-
     e(g.trimArrangements(1, [w], true)).toEqual([])
 
 })
