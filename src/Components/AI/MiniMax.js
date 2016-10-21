@@ -1,4 +1,5 @@
 import Utils from './index.js'
+import TreeModel from 'tree-model'
 
 export default class MiniMax {
 
@@ -8,6 +9,7 @@ export default class MiniMax {
         this.rankLevel = rankLevel
         this.state = initialState
         this.player = player
+        this.tree = new TreeModel()
 
     }
 
@@ -16,36 +18,41 @@ export default class MiniMax {
         this.state = state
 
     }
+    getState() {
+        return this.state
+    }
+    makeFirstLevel(player = this.player, board = this.state) {
+        return this.makeALevel(player, board, 1)
+    }
+    makeALevel(player = this.player, board = this.state, level) {
+        return this.tree.parse(this.makeNode(player, board, level))
+    }
+    makeAnotherLevel(player = this.player, node) {
+        return this.walker(node, cur => {
+            const nextLevels = this.genLevel(player, cur.model.board).map(board => this.makeALevel(player, board, cur.model.level + 1))
+            nextLevels.forEach(nextLevel => cur.addChild(nextLevel))
+        }, player)
+    }
 
-    makeLevel(howManyDeep = 1, player = this.player, state = this.state) {
+    makeLevel(howManyDeep = 1, player = this.player, board = this.state) {
 
-        if (howManyDeep == 1) {
-
-            return this.rankLevel(this.genLevel(player, state), player)
-
+        if (howManyDeep === 1) {
+            return this.makeFirstLevel(player, board)
+        }
+        if (howManyDeep === 2) {
+            return this.makeAnotherLevel(Utils.getOtherPlayer(player), this.makeFirstLevel(player, board))
+        }
+        if (howManyDeep === 3) {
+            return this.makeAnotherLevel(player, this.makeAnotherLevel(Utils.getOtherPlayer(player), this.makeFirstLevel(player, board)))
         }
 
-        let curBoards = this.genLevel(player, state)
-
-        //Figure that shit out
-        //this isnt going to work.....
-        return (new Array(howManyDeep - 1)).fill(true).map((a, i) => {
-
-            const levels = this.rankLevel(curBoards, player).map((rank, i) => { board: curBoards[i], ranking: rank })
-            curBoards = curBoards.map(board => this.genLevel(i % 2 == 0 ? Utils.getOtherPlayer(player) : player, board))
-
-            return levels
-
-        })
-
     }
-    static isBoard(board) {
-        return board[0] === null || board[0] === this.getPlayerNum(1) || board[0] === this.getPlayerNum(2)
+    walker(node, callback, level) {
+        node.all(state => state.model.level === level).forEach(state => callback(state))
+        return node
     }
-    rankLevel(level, player) {
-        if (level[0])
-            return level.map(board => this.rankLevel(player, board))
-
+    makeNode(player, board, level = 0) {
+        return { id: JSON.stringify(board), rank: this.rankLevel(player, board), board, player, level }
     }
 
 }
