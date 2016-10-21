@@ -1,4 +1,4 @@
-import m from './Minimax.js'
+import m from './MiniMax.js'
 const e = expect
 
 it('alllows setting and getting state', () => {
