@@ -15,7 +15,7 @@ it('allows generation of a level', () => {
         rankLevel: state => state + 1,
         player: 2
     })
-    expect(s.makeFirstLevel().model).toEqual({ id: "2", rank: 3, board: 2, player: 2, level: 1 })
+    expect(s.makeFirstLevel().model).toEqual({ id: "2", rank: 3, board: 2, player: 2, level: 1, shouldGenNextLevel: true })
 })
 it('allows generation of two levels', () => {
     let s = new m({
@@ -31,9 +31,10 @@ it('allows generation of two levels', () => {
         board: 2,
         player: 2,
         level: 1,
+        shouldGenNextLevel: true,
         children: [
-            { id: "0", rank: 2, board: 0, player: 1, level: 2 },
-            { "board": 1, "id": "1", "level": 2, "player": 1, "rank": 2 }
+            { id: "0", rank: 2, board: 0, player: 1, level: 2, shouldGenNextLevel: true },
+            { "board": 1, "id": "1", "level": 2, "player": 1, "rank": 2, shouldGenNextLevel: true }
         ]
     })
 })
@@ -51,9 +52,10 @@ it('allows generation of multiple level', () => {
         board: 2,
         player: 2,
         level: 1,
+        shouldGenNextLevel: true,
         children: [
-            { id: "0", rank: 2, board: 0, player: 1, level: 2 },
-            { "board": 1, "id": "1", "level": 2, "player": 1, "rank": 2, children: [{ id: "0", rank: 3, board: 0, player: 2, level: 3 }] }
+            { id: "0", rank: 2, board: 0, player: 1, level: 2, shouldGenNextLevel: true },
+            { "board": 1, "id": "1", "level": 2, "player": 1, "rank": 2, shouldGenNextLevel: true, children: [{ id: "0", rank: 3, board: 0, player: 2, shouldGenNextLevel: true, level: 3 }] }
         ]
     })
 })
