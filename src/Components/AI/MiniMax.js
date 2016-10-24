@@ -34,7 +34,7 @@ export default class MiniMax {
                 return
             }
             const nextBoards = this.genLevel(player, cur.model.board)
-            if (nextBoards.some(this.disregard)) {
+            if (nextBoards.some(board => this.disregard(player, board))) {
                 //if disregard ever returns true then drop the parent node
                 cur.drop()
                 return
