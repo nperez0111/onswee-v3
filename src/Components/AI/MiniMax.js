@@ -3,13 +3,14 @@ import TreeModel from 'tree-model'
 
 export default class MiniMax {
 
-    constructor({ genLevel, rankLevel, initialState, player }) {
+    constructor({ genLevel, rankLevel, initialState, player, disregard = a => false }) {
 
         this.genLevel = genLevel
         this.rankLevel = rankLevel
         this.state = initialState
         this.player = player
         this.tree = new TreeModel()
+        this.disregard = disregard
 
     }
 
@@ -24,16 +25,24 @@ export default class MiniMax {
     makeFirstLevel(player = this.player, board = this.state) {
         return this.makeALevel(player, board, 1)
     }
-    makeALevel(player = this.player, board = this.state, level) {
-        return this.tree.parse(this.makeNode(player, board, level))
+    makeALevel(player = this.player, board = this.state, level, shouldGenNextLevel = true) {
+        return this.tree.parse(this.makeNode(player, board, level, shouldGenNextLevel))
     }
-    makeAnotherLevel(player = this.player, node) {
+    makeAnotherLevel(player = this.player, node, level) {
         return this.walker(node, cur => {
             if (cur.model.shouldGenNextLevel === false) {
                 return
             }
-            const nextLevels = this.genLevel(player, cur.model.board).map(board => this.makeALevel(player, board, cur.model.level + 1))
-            nextLevels.forEach(nextLevel => cur.addChild(nextLevel))
+            const nextBoards = this.genLevel(player, cur.model.board)
+            if (nextBoards.some(this.disregard)) {
+                //if disregard ever returns true then drop the parent node
+                cur.drop()
+                return
+            }
+            const nextLevel = cur.model.level + 1
+            const nextLevels = nextBoards.map(board => this.makeALevel(player, board, nextLevel))
+
+            nextLevels.forEach(level => cur.addChild(level))
         }, player)
     }
 
@@ -47,7 +56,7 @@ export default class MiniMax {
 
         const arr = (new Array(howManyDeep - 1)).fill(false).map((c, i) => i)
 
-        const makeNewLevel = (prev, i) => this.makeAnotherLevel(i % 2 === 0 ? Utils.getOtherPlayer(player) : player, prev)
+        const makeNewLevel = (prev, i) => this.makeAnotherLevel(i % 2 === 0 ? Utils.getOtherPlayer(player) : player, prev, i + 1)
 
         return arr.reduce(makeNewLevel, this.makeFirstLevel(player, board))
     }
@@ -55,8 +64,8 @@ export default class MiniMax {
         node.all(state => state.model.level === level).forEach(state => callback(state))
         return node
     }
-    makeNode(player, board, level = 0) {
-        return { id: JSON.stringify(board), rank: this.rankLevel(player, board), shouldGenNextLevel: true, board, player, level }
+    makeNode(player, board, level = 0, shouldGenNextLevel = true) {
+        return { id: JSON.stringify(board), rank: this.rankLevel(player, board), shouldGenNextLevel, board, player, level }
     }
 
 }
