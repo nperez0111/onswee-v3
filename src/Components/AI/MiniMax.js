@@ -67,5 +67,11 @@ export default class MiniMax {
     makeNode(player, board, level = 0, shouldGenNextLevel = true) {
         return { id: JSON.stringify(board), rank: this.rankLevel(player, board), shouldGenNextLevel, board, player, level }
     }
+    findBestMove(howManyDeep) {
+
+    }
+    static sortLevels(fnode, snode) {
+        return fnode.model.rank - snode.model.rank
+    }
 
 }

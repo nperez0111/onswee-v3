@@ -1,4 +1,5 @@
 import AIUtils from './Utils.js'
+import MiniMax from './MiniMax.js'
 
 export default class AI extends AIUtils {
 
@@ -49,14 +50,22 @@ export default class AI extends AIUtils {
     }
 
     static pickBestMove(player, board) {
+        const m = new MiniMax({
+            genLevel: this.generateMoves,
+            rankLevel: this.rankBoard,
+            disregard: (player, board) => this.isWinIn(player, board),
+            initialState: board,
+            player
 
+        })
+        const boardPicked = m.findBestMove(5)
+        if (boardPicked === null) {
+            return false
+        }
+        return this.changeBetween(board, boardPicked)
     }
     static rankBoard(player, board) {
 
-    }
-    static sortBoardByRanking(player, board1, board2) {
-        //Assuming they are numbers
-        return this.rankBoard(player, board1) - this.rankBoard(player, board2)
     }
 
 }
