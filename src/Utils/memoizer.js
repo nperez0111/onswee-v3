@@ -1,10 +1,10 @@
 import LocalStorage from './LocalStorage.js'
 
 export default function memoize(f) {
-    const name = f.name
+    const funcName = f.name
     f.memoize = {}
     if (LocalStorage.supportsLocalStorage()) {
-        const obj = LocalStorage.getObj(name)
+        const obj = LocalStorage.getObj(funcName)
         if (obj) {
             Object.keys(obj).forEach(key => { f.memoize[key] = obj[key] })
         }
@@ -18,7 +18,7 @@ export default function memoize(f) {
             return f.memoize[str]
         } else {
             f.memoize[str] = f.apply(this, args)
-            LocalStorage.setObj(name, f.memoize[str])
+            LocalStorage.setObj(funcName, f.memoize[str])
             return f.memoize[str]
         }
     };
