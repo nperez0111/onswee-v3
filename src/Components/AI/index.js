@@ -1,7 +1,18 @@
 import AIUtils from './Utils.js'
 import MiniMax from './MiniMax.js'
+import memoize from '../../Utils/memoizer.js'
 
 export default class AI extends AIUtils {
+    constructor(player) {
+        this.mini = new MiniMax({
+            genLevel: memoize(this.generateMoves),
+            rankLevel: memoize(this.rankBoard),
+            disregard: memoize((player, board) => this.isWinIn(player, board)),
+            initialState: board,
+            player
+
+        })
+    }
 
     static generateMoves(player, board, turnBool = false) {
         return this.trimArrangements(player, this.getPlayersPositions(player, board).map(fro => {
@@ -50,15 +61,10 @@ export default class AI extends AIUtils {
     }
 
     static pickBestMove(player, board) {
-        const m = new MiniMax({
-            genLevel: this.generateMoves,
-            rankLevel: this.rankBoard,
-            disregard: (player, board) => this.isWinIn(player, board),
-            initialState: board,
-            player
 
-        })
-        const boardPicked = m.findBestMove(5)
+        this.mini.setState(player, board)
+
+        const boardPicked = this.mini.findBestMove(5)
         if (boardPicked === null) {
             return false
         }

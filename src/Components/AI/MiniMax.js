@@ -14,8 +14,8 @@ export default class MiniMax {
 
     }
 
-    setState(state) {
-
+    setState(player, state) {
+        this.player = player
         this.state = state
 
     }
