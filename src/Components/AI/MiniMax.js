@@ -70,15 +70,34 @@ export default class MiniMax {
     findBestMove(howManyDeep) {
         const mainNode = this.makeLevel(howManyDeep)
         const best = []
+        const betterThanAve = []
+        const avePerLevel = []
+
+        (new Array(howManyDeep - 1)).fill(false).map((c, i) => i).forEach(a => {
+            avePerLevel[a] = this.findAveOfLevel(mainNode, a + 1)
+            betterThanAve[a] = []
+        })
 
         mainNode.walk((node) => {
-            if (best[node.rank].rank > node.rank) {
-                best[node.rank] = node
+            const { rank, level } = node.model
+
+            if (best[level].model.rank > rank) {
+                best[rank] = node
+            }
+            if (rank > avePerLevel[level]) {
+                betterThanAve[level].push(node)
             }
         })
 
         return best[0]
 
+    }
+    findAveOfLevel(rootNode, level) {
+        const ranks = []
+
+        this.walker(rootNode, node => { ranks.push(node.model.rank) }, level)
+
+        return ranks.reduce((prev, cur) => prev + cur, 0) / ranks.length
     }
     static sortLevels(fnode, snode) {
         return fnode.model.rank - snode.model.rank
