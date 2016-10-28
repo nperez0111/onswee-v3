@@ -71,8 +71,25 @@ export default class AI extends AIUtils {
         }
         return this.changeBetween(board, boardPicked)
     }
-    static rankBoard(player, board) {
 
+    static rankBoard(player, board) {
+        return Object.values(this.statsToMeasure).reduce((prev, curStat) => {
+            if (curStat.true.call(this, player, board)) {
+                return prev + curStat.award
+            }
+            return prev
+        }, 0)
     }
+
+    static statsToMeasure = {
+        hasCenter: {
+            true: (player, board) => this.hasCenter(player, board),
+            award: 50 //Arbitrary number alert 
+        }
+    };
+    /*
+    Need some way of generating those numbers rather than just hard coding them.
+
+    */
 
 }
