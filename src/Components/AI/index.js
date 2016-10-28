@@ -4,6 +4,7 @@ import memoize from '../../Utils/memoizer.js'
 
 export default class AI extends AIUtils {
     constructor(player) {
+        super()
         this.mini = new MiniMax({
             genLevel: memoize(this.generateMoves),
             rankLevel: memoize(this.rankBoard),
