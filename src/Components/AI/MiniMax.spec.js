@@ -4,7 +4,7 @@ const e = expect
 it('alllows setting and getting state', () => {
     let s = new m({ initialState: 2 })
     e(s.getState()).toBe(2)
-    s.setState(3)
+    s.setState(1, 3)
     e(s.getState()).toBe(3)
 })
 
