@@ -2,70 +2,51 @@ import Utils from './index.js'
 import TreeModel from 'tree-model'
 
 export default class MiniMax {
-
-    constructor({ genLevel, rankLevel, initialState, player, disregard = a => false }) {
-
-        this.genLevel = genLevel
-        this.rankLevel = rankLevel
-        this.state = initialState
-        this.player = player
-        this.tree = new TreeModel()
-        this.disregard = disregard
-
+    static makeFirstLevel({ player, board, levelRanker }) {
+        return this.makeALevel({ level: 1, player, board, levelRanker })
     }
-
-    setState(player, state) {
-        this.player = player
-        this.state = state
-
+    static makeALevel({ player, board, level, levelRanker }, shouldGenNextLevel = true) {
+        const tree = new TreeModel()
+        return tree.parse(this.makeNode(player, board, level, levelRanker, shouldGenNextLevel))
     }
-    getState() {
-        return this.state
-    }
-    makeFirstLevel(player = this.player, board = this.state) {
-        return this.makeALevel(player, board, 1)
-    }
-    makeALevel(player = this.player, board = this.state, level, shouldGenNextLevel = true) {
-        return this.tree.parse(this.makeNode(player, board, level, shouldGenNextLevel))
-    }
-    makeAnotherLevel(player = this.player, node, level) {
-        return this.walker(node, cur => {
+    static makeAnotherLevel({ player, node, genLevel, disregard, levelRanker }) {
+        return MiniMax.walker(node, cur => {
             if (cur.model.shouldGenNextLevel === false) {
                 return
             }
-            const nextBoards = this.genLevel(player, cur.model.board)
-            if (nextBoards.some(board => this.disregard(player, board))) {
+            const nextBoards = genLevel(player, cur.model.board)
+            if (nextBoards.some(board => disregard(player, board))) {
                 //if disregard ever returns true then drop the parent node
                 cur.drop()
                 return
             }
             const nextLevel = cur.model.level + 1
-            const nextLevels = nextBoards.map(board => this.makeALevel(player, board, nextLevel))
+            const nextLevels = nextBoards.map(board => this.makeALevel({ player, board, level: nextLevel, levelRanker }))
 
-            nextLevels.forEach(level => cur.addChild(level))
+            nextLevels.forEach(curLevel => cur.addChild(curLevel))
         }, player)
     }
 
-    makeLevel(howManyDeep = 1, player = this.player, board = this.state) {
+    static makeLevel({ howManyDeep = 1, player, board, levelRanker, genLevel, disregard = a => false }) {
 
         if (howManyDeep === 1) {
 
-            return this.makeFirstLevel(player, board)
+            return MiniMax.makeFirstLevel({ player, board, levelRanker })
 
         }
 
         const arr = (new Array(howManyDeep - 1)).fill(false).map((c, i) => i)
 
-        const makeNewLevel = (prev, i) => this.makeAnotherLevel(i % 2 === 0 ? Utils.getOtherPlayer(player) : player, prev, i + 1)
+        const makeNewLevel = (prev, i) => MiniMax.makeAnotherLevel({ player: i % 2 === 0 ? Utils.getOtherPlayer(player) : player, node: prev, levelRanker, genLevel, disregard })
 
-        return arr.reduce(makeNewLevel, this.makeFirstLevel(player, board))
+        return arr.reduce(makeNewLevel, MiniMax.makeFirstLevel({ player, board, levelRanker }))
     }
-    walker(node, callback, level) {
+    static walker(node, callback, level) {
         node.all(state => state.model.level === level).forEach(state => callback(state))
         return node
     }
-    makeNode(player, board, level = 0, shouldGenNextLevel = true) {
-        return { id: JSON.stringify(board), rank: this.rankLevel(player, board), shouldGenNextLevel, board, player, level }
+    static makeNode(player, board, level = 0, levelRanker, shouldGenNextLevel = true) {
+        return { id: JSON.stringify(board), rank: levelRanker(player, board), shouldGenNextLevel, board, player, level }
     }
     findBestMove(howManyDeep) {
         const mainNode = this.makeLevel(howManyDeep)
@@ -92,10 +73,10 @@ export default class MiniMax {
         return best[0]
 
     }
-    findAveOfLevel(rootNode, level) {
+    static findAveOfLevel(rootNode, level) {
         const ranks = []
 
-        this.walker(rootNode, node => { ranks.push(node.model.rank) }, level)
+        MiniMax.walker(rootNode, node => { ranks.push(node.model.rank) }, level)
 
         return ranks.reduce((prev, cur) => prev + cur, 0) / ranks.length
     }

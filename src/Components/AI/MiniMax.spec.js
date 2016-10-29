@@ -1,30 +1,25 @@
 import m from './MiniMax.js'
 const e = expect
 
-it('alllows setting and getting state', () => {
-    let s = new m({ initialState: 2 })
-    e(s.getState()).toBe(2)
-    s.setState(1, 3)
-    e(s.getState()).toBe(3)
-})
-
 it('allows generation of a level', () => {
-    let s = new m({
-        initialState: 2,
-        genLevel: state => (new Array(state)).fill(false).map((c, i) => i),
-        rankLevel: state => state + 1,
-        player: 2
-    })
-    expect(s.makeFirstLevel().model).toEqual({ id: "2", rank: 3, board: 2, player: 2, level: 1, shouldGenNextLevel: true })
+    const expected = {
+        id: "2",
+        rank: 3,
+        board: 2,
+        player: 2,
+        level: 1,
+        shouldGenNextLevel: true
+    }
+    expect(m.makeFirstLevel({ player: 2, board: 2, levelRanker: state => state + 1 }).model).toEqual(expected)
 })
 it('allows generation of two levels', () => {
-    let s = new m({
-        initialState: 2,
+    const node = m.makeLevel({
+        howManyDeep: 2,
+        player: 2,
+        board: 2,
         genLevel: (player, state) => (new Array(state)).fill(false).map((c, i) => i),
-        rankLevel: state => state + 1,
-        player: 2
+        levelRanker: a => a + 1
     })
-    const node = s.makeLevel(2)
     expect(node.model).toEqual({
         id: "2",
         rank: 3,
@@ -39,13 +34,13 @@ it('allows generation of two levels', () => {
     })
 })
 it('allows generation of multiple level', () => {
-    let s = new m({
-        initialState: 2,
+    const node = m.makeLevel({
+        howManyDeep: 3,
+        player: 2,
+        board: 2,
         genLevel: (player, state) => (new Array(state)).fill(false).map((c, i) => i),
-        rankLevel: state => state + 1,
-        player: 2
+        levelRanker: a => a + 1
     })
-    const node = s.makeLevel(3)
     expect(node.model).toEqual({
         id: "2",
         rank: 3,
