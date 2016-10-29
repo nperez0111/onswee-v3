@@ -37,31 +37,31 @@ export default class AI extends AIUtils {
             return hasNoOtherBoardLikeThis
         })
     }
-    static decideMoveToTake(player, board) {
+    static decideMoveToTake(player, board, turn) {
         const options = [{
-                is: player => this.isPlacingRound(player),
-                then: this.addToBoard
-            }, {
-                is: player => this.isExtraRulesRound(player),
-                then: this.moveWithExtraRules
-            }, {
-                is: this.isAbleToWin,
-                then: this.takeTheWin
-            }, {
-                is: this.isAbleToBlock,
-                then: this.blockOtherPlayer
-            }, {
-                is: true,
-                then: this.pickBestMove
-            }, {
-                is: true,
-                then: this.justMoveAnywhere
-            }]
-            //should always have a move to take but just in case will use null nll as the default
+            is: (player, board, turn) => this.isPlacingRound(turn),
+            then: this.addToBoard
+        }, {
+            is: (player, board, turn) => this.isExtraRulesRound(turn),
+            then: this.moveWithExtraRules
+        }, {
+            is: (player, board) => this.isAbleToWin(player, board),
+            then: this.takeTheWin
+        }, {
+            is: (player, board) => this.isAbleToBlock(player, board),
+            then: this.blockOtherPlayer
+        }, {
+            is: true,
+            then: this.pickBestMove
+        }, {
+            is: true,
+            then: (player, board) => this.justMoveAnywhere(player, board)
+        }]
+
         return this.returnResponse(options, option => option.is(player, board) && option.then(player, board), [null, null])
     }
 
-    static pickBestMove(player, board) {
+    static pickBestMove(player, board, turn) {
 
         this.mini.setState(player, board)
 
