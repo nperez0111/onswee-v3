@@ -18,6 +18,7 @@ export default function Reducer(state = UnDoable.new(Logic.getInitialState()), a
         case 'undo':
         case 'redo':
             return state[action.type]()
+        case 'ai_move':
         case 'move':
             {
 
@@ -45,6 +46,7 @@ export default function Reducer(state = UnDoable.new(Logic.getInitialState()), a
             {
                 return state.setState({...addTurn, board: Logic.add(player, board, action.to) })
             }
+        case 'ai_restricted_move':
         case 'restricted_move':
             {
                 if (Logic.canMoveFromTo(player, board, action.from, to)) {
