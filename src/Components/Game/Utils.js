@@ -44,11 +44,14 @@ export default class GameUtils extends Arrangements {
             return cur === null;
         });
     }
-    static makeState(player, fro, to, type = 'move') {
-        return makeObj(['player', 'from', 'to', 'type'], [player, fro, to, type])
-    }
-    static makeAIState(player, fro, to, type = 'ai_move') {
-        return this.makeState(player, fro, to, type)
+    static makeState(player, fro, to, type = 'move', ai = false) {
+        const keys = ['player', 'from', 'to', 'type']
+        const vals = [player, fro, to, type]
+        if (ai) {
+            keys.push('emit')
+            vals.push('ai_move')
+        }
+        return makeObj(keys, vals)
     }
     static isPlacingRound(turn) {
         return turn < this.Constants.placingRound

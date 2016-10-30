@@ -101,4 +101,7 @@ export default class AIUtils extends Logic {
     static blockTheOtherPlayer(player, board) {
         return this.isAbleToBlock(player, board, false)
     }
+    static makeAIState(player, fro, to, type = 'ai_move') {
+        return this.makeState(player, fro, to, type)
+    }
 }
