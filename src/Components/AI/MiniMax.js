@@ -48,14 +48,14 @@ export default class MiniMax {
     static makeNode(player, board, level = 0, levelRanker, shouldGenNextLevel = true) {
         return { id: JSON.stringify(board), rank: levelRanker(player, board), shouldGenNextLevel, board, player, level }
     }
-    static findBestMove(optionss) {
+    static findBestMove(options) {
         const mainNode = this.makeLevel(options)
         const best = []
         const betterThanAve = []
         const avePerLevel = []
 
         (new Array(howManyDeep - 1)).fill(false).map((c, i) => i).forEach(a => {
-            avePerLevel[a] = this..findAveOfLevel(mainNode, a + 1)
+            avePerLevel[a] = this.findAveOfLevel(mainNode, a + 1)
             betterThanAve[a] = []
         })
 
