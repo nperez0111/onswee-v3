@@ -10,7 +10,7 @@ export default class MiniMax {
         return tree.parse(this.makeNode(player, board, level, levelRanker, shouldGenNextLevel))
     }
     static makeAnotherLevel({ player, node, genLevel, disregard, levelRanker }) {
-        return MiniMax.walker(node, cur => {
+        return this.walker(node, cur => {
             if (cur.model.shouldGenNextLevel === false) {
                 return
             }
@@ -31,15 +31,15 @@ export default class MiniMax {
 
         if (howManyDeep === 1) {
 
-            return MiniMax.makeFirstLevel({ player, board, levelRanker })
+            return this.makeFirstLevel({ player, board, levelRanker })
 
         }
 
         const arr = (new Array(howManyDeep - 1)).fill(false).map((c, i) => i)
 
-        const makeNewLevel = (prev, i) => MiniMax.makeAnotherLevel({ player: i % 2 === 0 ? Utils.getOtherPlayer(player) : player, node: prev, levelRanker, genLevel, disregard })
+        const makeNewLevel = (prev, i) => this.makeAnotherLevel({ player: i % 2 === 0 ? Utils.getOtherPlayer(player) : player, node: prev, levelRanker, genLevel, disregard })
 
-        return arr.reduce(makeNewLevel, MiniMax.makeFirstLevel({ player, board, levelRanker }))
+        return arr.reduce(makeNewLevel, this.makeFirstLevel({ player, board, levelRanker }))
     }
     static walker(node, callback, level) {
         node.all(state => state.model.level === level).forEach(state => callback(state))
@@ -48,14 +48,14 @@ export default class MiniMax {
     static makeNode(player, board, level = 0, levelRanker, shouldGenNextLevel = true) {
         return { id: JSON.stringify(board), rank: levelRanker(player, board), shouldGenNextLevel, board, player, level }
     }
-    findBestMove(howManyDeep) {
-        const mainNode = this.makeLevel(howManyDeep)
+    static findBestMove(optionss) {
+        const mainNode = this.makeLevel(options)
         const best = []
         const betterThanAve = []
         const avePerLevel = []
 
         (new Array(howManyDeep - 1)).fill(false).map((c, i) => i).forEach(a => {
-            avePerLevel[a] = this.findAveOfLevel(mainNode, a + 1)
+            avePerLevel[a] = this..findAveOfLevel(mainNode, a + 1)
             betterThanAve[a] = []
         })
 
@@ -76,7 +76,7 @@ export default class MiniMax {
     static findAveOfLevel(rootNode, level) {
         const ranks = []
 
-        MiniMax.walker(rootNode, node => { ranks.push(node.model.rank) }, level)
+        this.walker(rootNode, node => { ranks.push(node.model.rank) }, level)
 
         return ranks.reduce((prev, cur) => prev + cur, 0) / ranks.length
     }
