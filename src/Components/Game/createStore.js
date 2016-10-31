@@ -5,4 +5,8 @@ import SelectReducer from '../Select/Reducer.js';
 import defaultState from './defaultState.js';
 
 
-export default () => createStore(combineReducers({ select: SelectReducer, names: NameReducer, game: Reducer }), defaultState, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__())
+export default () => {
+    const routes = { select: SelectReducer, names: NameReducer, game: Reducer }
+    const devTools = window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+    return createStore(combineReducers(routes), defaultState, devTools)
+}
