@@ -5,15 +5,13 @@ import GameLogic from './Logic.js';
 import PlayerHUD from '../Views/PlayerHUD.js';
 import TurnHUD from '../Views/TurnHUD.js';
 import { createStore, combineReducers } from 'redux';
-import Storage from '../../Utils/Storage.js';
 import Reducer from './Reducer.js';
 import NameReducer from './NameReducer.js';
 import SelectReducer from '../Select/Reducer.js';
-import SelectMiddleWare from '../Select/MiddleWare.js';
-import onWin from './WinMiddleWare.js';
 import defaultState from './defaultState.js';
-import LocalStorage from '../../Utils/LocalStorage.js';
 import Notifications from 'react-notify-toast';
+import AttachMiddleWares from './AttachMiddleWares.js';
+
 export default class GameView extends Component {
     constructor(a) {
         super(a)
@@ -25,22 +23,7 @@ export default class GameView extends Component {
 
         window.store = this.state.store
 
-        //Pretty log for state change of select
-        this.state.store.subscribe(() => Storage.log('After', undefined)(this.state.store.getState()))
-
-
-        this.state.store.subscribe(onWin.bind(this))
-
-        this.state.store.subscribe(() => {
-            LocalStorage.setObj('game', this.state.store.getState())
-        })
-
-
-        //Super Important Middle ware to propagate changes from select to game
-        this.state.store.subscribe(() => {
-            const state = this.state.store.getState().select
-            SelectMiddleWare.call(this, state)
-        })
+        AttachMiddleWares.call(this, this.state.store)
 
         this.handleNameChange = this.handleNameChange.bind(this)
         this.stateChangeOf = this.stateChangeOf.bind(this)

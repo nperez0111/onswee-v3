@@ -10,7 +10,7 @@ const sleep = function(duration) {
     }
 }
 
-export default function WinMiddleWare() {
+export default function AIMiddleWare() {
     const action = this.state.store.getState().game.getState()
     const { board, turn } = this.state.store.getState().game.getState()
     if ('emit' in action) {

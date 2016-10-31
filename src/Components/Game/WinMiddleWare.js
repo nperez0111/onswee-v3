@@ -1,8 +1,7 @@
 import { notify } from 'react-notify-toast';
 import React from 'react';
 import PlayerPiece from '../Views/PlayerPiece.js';
-export default function WinMiddleWare() {
-    const action = this.state.store.getState().game.getState()
+export default function WinMiddleWare(action) {
     if ('emit' in action) {
         switch (action.emit) {
             case 'win':
