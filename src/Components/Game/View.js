@@ -7,11 +7,12 @@ import TurnHUD from '../Views/TurnHUD.js';
 import Notifications from 'react-notify-toast';
 import AttachMiddleWares from './AttachMiddleWares.js';
 import createStore from './createStore.js';
+import onFirstPageLoad from '../../Utils/onFirstPageLoad.js';
 
 export default class GameView extends Component {
     constructor(a) {
         super(a)
-
+        onFirstPageLoad.run(() => { alert('first time here') })
 
         this.state = {
             store: createStore()
