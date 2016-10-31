@@ -4,13 +4,9 @@ import Board from './Board.js';
 import GameLogic from './Logic.js';
 import PlayerHUD from '../Views/PlayerHUD.js';
 import TurnHUD from '../Views/TurnHUD.js';
-import { createStore, combineReducers } from 'redux';
-import Reducer from './Reducer.js';
-import NameReducer from './NameReducer.js';
-import SelectReducer from '../Select/Reducer.js';
-import defaultState from './defaultState.js';
 import Notifications from 'react-notify-toast';
 import AttachMiddleWares from './AttachMiddleWares.js';
+import createStore from './createStore.js';
 
 export default class GameView extends Component {
     constructor(a) {
@@ -18,7 +14,7 @@ export default class GameView extends Component {
 
 
         this.state = {
-            store: createStore(combineReducers({ select: SelectReducer, names: NameReducer, game: Reducer }), defaultState, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__())
+            store: createStore()
         }
 
         window.store = this.state.store
