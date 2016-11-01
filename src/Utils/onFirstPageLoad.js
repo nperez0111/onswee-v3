@@ -4,12 +4,29 @@ const key = "firstPageLoad"
 
 export default class onFirstPageLoad {
     static run(fns = [], runAnyWay = false) {
-        if (!Array.isArray(fns)) {
-            fns = [fns]
-        }
+
+        onFirstPageLoad.do(fns)
+
         if (LocalStorage.getItem(key) === null || runAnyWay) {
-            fns.forEach(a => a())
+
+            onFirstPageLoad.toRun.forEach(a => a())
             LocalStorage.setItem(key, "true")
+
         }
+
     }
+    static do(fns = []) {
+
+        if (!Array.isArray(fns)) {
+
+            onFirstPageLoad.toRun.push(fns)
+
+        } else {
+
+            onFirstPageLoad.toRun = onFirstPageLoad.toRun.concat(fns)
+
+        }
+
+    }
+    static toRun = [() => { console.log("First time this page has been run") }]
 }
