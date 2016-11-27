@@ -75,11 +75,10 @@ export default class AIUtils extends Logic {
         }
         return this.returnResponse(indexes, index => {
             if (index < 4) {
-                if (this.hasCenterIn(null, board)) {
+                if (this.isCenterEmptyIn(board)) {
                     return retToBeBool ? true : resp(this.center, index)
                 }
-            }
-            if (index > 3) {
+            } else {
                 if (hasFinalPieceToMoveIn(index) && checkPairCompleter(index)) {
 
                     const completer = this.pairCompleter[index]

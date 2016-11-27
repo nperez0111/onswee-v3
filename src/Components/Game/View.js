@@ -25,6 +25,7 @@ export default class GameView extends Component {
         this.handleNameChange = this.handleNameChange.bind(this)
         this.stateChangeOf = this.stateChangeOf.bind(this)
         this.undoableMethod = this.undoableMethod.bind(this)
+        this.handleAIChange = this.handleAIChange.bind(this)
     }
     render() {
         const { board, turn } = this.state.store.getState().game.getState()
@@ -40,13 +41,14 @@ export default class GameView extends Component {
                 </TurnHUD>
                 <Board board={board} turn={turn} onSelect={this.stateChangeOf('store')} selected={GameLogic.getPossibleMoveLocs(selected,board,turn)} />
                 <PlayerHUD turn={turn} playerNames={[player1,player2]} onEdit={this.handleNameChange} />
+                <input type='checkbox' onClick={this.handleAIChange} />
             </div>
         )
     }
     undoableMethod(func) {
         return () => {
             const obj = this.state.store.getState()
-            console.log(obj)
+                //console.log(obj)
             obj.game[func]()
             this.stateChangeOf('store')({ type: func })
         }
@@ -67,5 +69,10 @@ export default class GameView extends Component {
             const newName = e.target.value
             this.stateChangeOf('store')(makeObj(['id', 'name', 'type'], [id, newName, 'update']))
         }
+    }
+    handleAIChange() {
+        const newValue = !this.state.store.getState().ai.ai
+        this.stateChangeOf('store')(makeObj(['value', 'type'], [newValue, 'update']))
+
     }
 }

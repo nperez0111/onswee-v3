@@ -39,31 +39,34 @@ export default class AI extends AIUtils {
     }
     static decideMoveToTake(player, board, turn) {
         const options = [{
-            is: (player, board, turn) => this.isPlacingRound(turn),
-            then: this.addToBoard
-        }, {
-            is: (player, board, turn) => this.isExtraRulesRound(turn),
-            then: this.moveWithExtraRules
-        }, {
-            is: (player, board) => this.isAbleToWin(player, board),
-            then: this.takeTheWin
-        }, {
-            is: (player, board) => this.isAbleToBlock(player, board),
-            then: this.blockOtherPlayer
-        }, {
-            is: true,
-            then: this.pickBestMove
-        }, {
-            is: true,
-            then: (player, board) => this.justMoveAnywhere(player, board)
-        }]
+                is: (player, board, turn) => this.isPlacingRound(turn),
+                then: this.addToBoard
+            }, {
+                is: (player, board, turn) => this.isExtraRulesRound(turn),
+                then: this.moveWithExtraRules
+            }, {
+                is: (player, board) => this.isAbleToWin(player, board),
+                then: this.takeTheWin
+            }, {
+                is: (player, board) => this.isAbleToBlock(player, board),
+                then: this.blockOtherPlayer
+            },
+            /*{
+                       is: true,
+                       then: this.pickBestMove
+                   },*/
+            {
+                is: true,
+                then: (player, board) => this.justMoveAnywhere(player, board)
+            }
+        ]
 
-        return this.returnResponse(options, option => option.is(player, board) && option.then(player, board), [null, null])
+        return this.returnResponse(options, option => option.is(player, board, turn) && option.then(player, board), [null, null])
     }
 
     static pickBestMove(player, board, turn) {
 
-        this.mini.setState(player, board)
+        //this.mini.setState(player, board)
 
         const boardPicked = this.mini.findBestMove(5)
         if (boardPicked === null) {

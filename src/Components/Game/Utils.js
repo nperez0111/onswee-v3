@@ -33,6 +33,9 @@ export default class GameUtils extends Arrangements {
     static isEmptyPos(pos, board) {
         return board[pos] === null
     }
+    static isCenterEmptyIn(board) {
+        return this.isEmptyPos(this.center, board)
+    }
     static hasPosIn(player, pos, board) {
         return player === board[pos]
     }
@@ -65,6 +68,10 @@ export default class GameUtils extends Arrangements {
     static getWinState(player) {
         const initialState = this.getInitialState()
         return {...initialState, emit: 'win', who: player }
+    }
+    static getAIState(state) {
+        const { board, turn } = state
+        return { board, turn, ai: 'play' }
     }
     static getInitialState() {
         return {
