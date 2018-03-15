@@ -11,7 +11,11 @@ const incrementTurn = (state) => {
 export default function Reducer(state = UnDoable.new(Logic.getInitialState()), action) {
     const { turn, board } = state.getState()
     const addTurn = incrementTurn(state)
+    const ai = { ai: state.getState().ai || false }
     const { to } = action
+    const updateBoard = board => {
+        return {...addTurn, ...ai, board }
+    }
     const player = Logic.getPlayer(turn)
 
     switch (action.type) {
@@ -28,14 +32,19 @@ export default function Reducer(state = UnDoable.new(Logic.getInitialState()), a
 
                     if (Logic.isWinIn(player, postState)) {
 
-                        return state.setState(Logic.getWinState(player)).clearHistory()
+                        return state.setState({...ai, ...Logic.getWinState(player) }).clearHistory()
 
                     }
 
-                    return state.setState({...addTurn, board: postState })
+                    return state.setState(updateBoard(postState))
 
                 }
                 break;
+            }
+        case 'toggle_ai':
+            {
+                ai.ai = !ai.ai
+                return state.setState({...state.getState(), ...ai })
             }
         case 'reset_board':
             {
@@ -44,7 +53,7 @@ export default function Reducer(state = UnDoable.new(Logic.getInitialState()), a
             }
         case 'add_to_board':
             {
-                return state.setState({...addTurn, board: Logic.add(player, board, action.to) })
+                return state.setState({...addTurn, ...ai, board: Logic.add(player, board, action.to) })
             }
         case 'ai_restricted_move':
         case 'restricted_move':
@@ -58,7 +67,7 @@ export default function Reducer(state = UnDoable.new(Logic.getInitialState()), a
 
                     }
 
-                    return state.setState({...addTurn, board: postState });
+                    return state.setState(updateBoard(postState))
                 }
                 break;
             }

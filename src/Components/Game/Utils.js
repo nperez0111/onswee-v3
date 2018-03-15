@@ -76,7 +76,8 @@ export default class GameUtils extends Arrangements {
     static getInitialState() {
         return {
             board: this.getEmptyBoard(),
-            turn: 1
+            turn: 1,
+            ai: false
         }
     }
 }

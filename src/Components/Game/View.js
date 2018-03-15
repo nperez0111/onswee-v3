@@ -71,8 +71,7 @@ export default class GameView extends Component {
         }
     }
     handleAIChange() {
-        const newValue = !this.state.store.getState().ai.ai
-        this.stateChangeOf('store')(makeObj(['value', 'type'], [newValue, 'update']))
+        this.stateChangeOf('store')(makeObj(['type'], ['toggle_ai']))
 
     }
 }

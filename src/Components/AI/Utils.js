@@ -8,7 +8,7 @@ export default class AIUtils extends Logic {
         return matrix.map((cur, i) => board[i + cur])
     }
     static twoBoardEqual(board1, board2) {
-        return board1.every((c, i) => c == board2[i])
+        return board1.every((c, i) => c === board2[i])
     }
     static areBoardsEqual(board1, board2) {
         if (this.twoBoardEqual(board1, board2)) {

@@ -13,7 +13,7 @@ const sleep = function(duration) {
 export default function AIMiddleWare() {
     const action = this.state.store.getState().game.getState()
     const { board, turn } = this.state.store.getState().game.getState()
-    if ('ai' in action) {
+    if ('emit' in action) {
         switch (action.emit) {
             case 'play':
                 {

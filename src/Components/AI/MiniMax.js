@@ -53,8 +53,9 @@ export default class MiniMax {
         const best = []
         const betterThanAve = []
         const avePerLevel = []
+        const arr = new Array(options.howManyDeep - 1)
 
-        (new Array(howManyDeep - 1)).fill(false).map((c, i) => i).forEach(a => {
+        arr.fill(false).map((c, i) => i).forEach((a) => {
             avePerLevel[a] = this.findAveOfLevel(mainNode, a + 1)
             betterThanAve[a] = []
         })

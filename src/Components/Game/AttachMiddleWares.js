@@ -2,6 +2,7 @@ import onWin from './WinMiddleWare.js';
 import SelectMiddleWare from '../Select/MiddleWare.js';
 import Storage from '../../Utils/Storage.js';
 import LocalStorage from '../../Utils/LocalStorage.js';
+import AIMiddleWare from '../AI/AIMiddleWare.js';
 
 export default function(store) {
 
@@ -15,6 +16,7 @@ export default function(store) {
         SelectMiddleWare.call(this, state.select)
 
         LocalStorage.setObj('game', state)
+        AIMiddleWare.call(this, state)
     })
 
 }
