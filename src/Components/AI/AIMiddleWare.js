@@ -1,9 +1,9 @@
 import AI from './'
 
-const sleep = function(duration) {
-    return function(...args) {
-        return new Promise(function(resolve, reject) {
-            setTimeout(function() {
+const sleep = function (duration) {
+    return function (...args) {
+        return new Promise(function (resolve, reject) {
+            setTimeout(function () {
                 resolve(...args)
             }, duration)
         })
@@ -26,6 +26,7 @@ export default function AIMiddleWare() {
                     .then(sleep(1000))
                     .then([fro, to] => that.dispatchGame(AI.makeAIState(2, fro, to, action.emit)))
 */
+                    sleep(1)
                     break
                 }
             default:

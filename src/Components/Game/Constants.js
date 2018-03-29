@@ -1,6 +1,7 @@
-export default (() => ({
-    const placingRound = 7
-    const extraRulesRound = 13
+const placingRound = 7
+const extraRulesRound = 13
+export default (() => {
+
     return {
         player1: 1,
         player2: 2,
@@ -9,4 +10,4 @@ export default (() => ({
         placingRound: placingRound,
         extraRulesRound: extraRulesRound
     }
-}))()
+})()

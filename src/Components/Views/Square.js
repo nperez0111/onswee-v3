@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import PlayerPiece from './PlayerPiece.js';
 import GameUtils from '../Game/Utils.js';
 import { makeObj } from '../../Utils/Utils.js';

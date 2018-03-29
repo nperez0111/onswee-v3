@@ -1,4 +1,5 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import Square from '../Views/Square.js';
 import './Board.css';
 const Board = ({ board, turn, onSelect, selected }) => {

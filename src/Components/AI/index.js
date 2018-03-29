@@ -1,6 +1,5 @@
 import AIUtils from './Utils.js'
 import MiniMax from './MiniMax.js'
-import memoize from '../../Utils/memoizer.js'
 
 export default class AI extends AIUtils {
 
