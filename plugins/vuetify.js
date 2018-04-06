@@ -12,9 +12,10 @@ import {
     VToolbar,
     VParallax,
     VForm,
-    VTextField
+    VTextField,
+    VCheckBox
 } from 'vuetify'
-
+import VueDragDrop from 'vue-drag-drop';
 Vue.use(Vuetify, {
     components: {
         VApp,
@@ -28,6 +29,8 @@ Vue.use(Vuetify, {
         VToolbar,
         VParallax,
         VForm,
-        VTextField
+        VTextField,
+        VCheckBox
     }
 })
+Vue.use(VueDragDrop)

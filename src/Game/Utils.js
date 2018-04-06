@@ -1,5 +1,6 @@
 import Arrangements from './Arrangements.js';
-import { makeObj } from '../../Utils/Utils.js';
+import { makeObj } from '../../lib/Utils.js';
+import Constants from './Constants.js';
 
 export default class GameUtils extends Arrangements {
     static isPlayersTurn(player, turn) {
@@ -12,10 +13,10 @@ export default class GameUtils extends Arrangements {
         return ((turn - 1) % 2) + 1
     }
     static getOtherPlayer(player) {
-        if (player === this.Constants.player1) {
-            return this.Constants.player2
-        } else if (player === this.Constants.player2) {
-            return this.Constants.player1
+        if (player === Constants.player1) {
+            return Constants.player2
+        } else if (player === Constants.player2) {
+            return Constants.player1
         }
         throw Error("Attempting to get opposite of:" + player)
     }
@@ -28,7 +29,7 @@ export default class GameUtils extends Arrangements {
         }, [])
     }
     static getPlayerNum(id) {
-        return id === this.Constants.player1 || id === this.Constants.player2 ? id : false;
+        return id === Constants.player1 || id === Constants.player2 ? id : false;
     }
     static isEmptyPos(pos, board) {
         return board[pos] === null
@@ -57,21 +58,13 @@ export default class GameUtils extends Arrangements {
         return makeObj(keys, vals)
     }
     static isPlacingRound(turn) {
-        return turn < this.Constants.placingRound
+        return turn < Constants.placingRound
     }
     static isExtraRulesRound(turn) {
-        return turn < this.Constants.extraRulesRound
+        return turn < Constants.extraRulesRound
     }
     static getEmptyBoard() {
         return (new Array(9)).fill(null)
-    }
-    static getWinState(player) {
-        const initialState = this.getInitialState()
-        return { ...initialState, emit: 'win', who: player }
-    }
-    static getAIState(state) {
-        const { board, turn } = state
-        return { board, turn, ai: 'play' }
     }
     static getInitialState() {
         return {

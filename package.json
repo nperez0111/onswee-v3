@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "nuxt": "^1.0.0",
+    "vue-drag-drop": "^0.2.4",
     "vuetify": "^1.0.0"
   },
   "devDependencies": {

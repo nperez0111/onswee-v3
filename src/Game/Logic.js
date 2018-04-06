@@ -2,40 +2,43 @@ import GameUtils from './Utils.js';
 
 export default class GameLogic extends GameUtils {
     static isWinIn(player, board) {
-        const positions = this.getPlayersPositions(player, board).sort();
+        const positions = GameLogic.getPlayersPositions(player, board).sort();
 
         //check to disregard values above 4 as they cant possibly be a win
         if (positions[0] > 3) {
             return false;
         }
 
-        var possibleWaysToWin = this.winningArrangements[positions[0]];
+        var possibleWaysToWin = GameLogic.winningArrangements[positions[0]];
 
         //if you have every position that is required to win you are a win
         return possibleWaysToWin.every((position) => {
-            return this.hasPosIn(player, position, board)
+            return GameLogic.hasPosIn(player, position, board)
         })
     }
     static canMoveInto(player, pos, board) {
 
-        if (!this.isEmptyPos(pos, board)) {
+        if (!GameLogic.isEmptyPos(pos, board)) {
             return false
         }
 
         //any position can move to center
-        if (pos === this.center) {
+        if (pos === GameLogic.center) {
             return true;
         }
 
         //check all possibles that can move into specified pos
-        return this.allPosMoveLocs[pos].some((loc) => {
-            return (this.hasPosIn(player, loc, board))
+        return GameLogic.allPosMoveLocs[pos].some((loc) => {
+            return (GameLogic.hasPosIn(player, loc, board))
         })
 
     }
+    static canPlaceInto(player, pos, board) {
+        return GameLogic.isEmptyPos(pos, board) && !GameLogic.hasIllegalLineIn(player, GameLogic.add(player, board, pos))
+    }
     static moveFromTo(player, board, fro, to) {
-        if (this.canMoveFromTo(player, board, fro, to)) {
-            return this.hypotheticalMoveInFromTo(player, board, fro, to)
+        if (GameLogic.canMoveFromTo(player, board, fro, to)) {
+            return GameLogic.hypotheticalMoveInFromTo(player, board, fro, to)
         }
         return false
     }
@@ -56,36 +59,39 @@ export default class GameLogic extends GameUtils {
     static canMoveFromTo(player, board, fro, to) {
 
         //check if where we are moving is even empty
-        if (this.isEmptyPos(to, board)) {
+        if (GameLogic.isEmptyPos(to, board)) {
 
             //check if player even has that position
-            if (this.hasPosIn(player, fro, board)) {
+            if (GameLogic.hasPosIn(player, fro, board)) {
 
                 //check if we can move to that position
-                if (fro === this.center || this.allPosMoveLocs[fro].some(a => a === to)) {
+                if (fro === GameLogic.center || GameLogic.allPosMoveLocs[fro].some(a => a === to)) {
                     return true;
                 }
             }
         }
         return false;
     }
+    static canMoveFromToWithRules(player, board, fro, to) {
+        return GameLogic.canMoveFromTo(player, board, fro, to) && !GameLogic.hasIllegalLineIn(player, GameLogic.hypotheticalMoveInFromTo(player, board, fro, to))
+    }
     static hasIllegalLineIn(player, board) {
-        if (board.filter(c => c === player).length > 3 || board.filter(c => c === this.getOtherPlayer(player)).length > 3) {
+        if (board.filter(c => c === player).length > 3 || board.filter(c => c === GameLogic.getOtherPlayer(player)).length > 3) {
             //check for the off chance there are too many pieces
             return true;
         }
-        const illegals = this.winningArrangements.concat(this.illegalArrangements)
+        const illegals = GameLogic.winningArrangements.concat(GameLogic.illegalArrangements)
 
         return illegals.some(possibleLocs => {
-            return possibleLocs.every(cur => this.hasPosIn(player, cur, board))
+            return possibleLocs.every(cur => GameLogic.hasPosIn(player, cur, board))
         })
     }
     static moveFromToWithRules(player, board, fro, to) {
-        const postMove = this.moveFromTo(player, board, fro, to)
+        const postMove = GameLogic.moveFromTo(player, board, fro, to)
         if (postMove === false) {
             return false
         }
-        if (this.hasIllegalLineIn(player, postMove)) {
+        if (GameLogic.hasIllegalLineIn(player, postMove)) {
             return false
         }
         return postMove
@@ -108,7 +114,7 @@ export default class GameLogic extends GameUtils {
     }
     static getPossibleMoveLocs(selected, board, turn) {
         return board.map((loc, to) => {
-            return this.canMoveFromTo(this.getPlayer(turn), board, selected, to)
+            return GameLogic.canMoveFromTo(GameLogic.getPlayer(turn), board, selected, to)
         })
     }
 }

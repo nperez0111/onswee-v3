@@ -1,6 +1,6 @@
-import UnDoable from '../../Utils/UnDoable.js'
+import UnDoable from '../../lib/UnDoable.js'
 import Logic from './Logic.js'
-import LocalStorage from '../../Utils/LocalStorage.js'
+import LocalStorage from '../../lib/LocalStorage.js'
 const hydrate = (obj) => {
     return { ...obj, game: UnDoable.new(obj.game.present, obj.game.history, obj.game.future) }
 }

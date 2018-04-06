@@ -6,7 +6,8 @@ function logMe(toCall) {
         return a;
     }
 }
-export default class Loggings {
+class Loggings {
+
     static trackcurrent(board) {
         var firstLine = "|",
             secondLine = "|",
@@ -31,7 +32,6 @@ export default class Loggings {
         this.logger(line, firstLine, secondLine, thirdLine, line);
         return board
     }
-    static logAll = true;
 
     static log() {
         return this.logger.apply(this, arguments)
@@ -46,3 +46,11 @@ export default class Loggings {
         return logMe(a => { console.warn(a) }).apply(this, arguments)
     }
 }
+
+Object.defineProperties(Loggings, {
+    logAll: {
+        value: true
+    }
+})
+
+export default Loggings

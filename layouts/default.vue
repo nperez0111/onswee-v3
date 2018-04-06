@@ -24,39 +24,63 @@
             <nuxt />
         </v-content>
         <v-navigation-drawer temporary right v-model="rightDrawer" fixed>
-            anything can be in here
-            <v-list>
-                <v-list-tile>
-                    <v-list-tile-action>
-                        <v-icon light>compare_arrows</v-icon>
-                    </v-list-tile-action>
-                    <v-list-tile-title>Switch drawer (click me)</v-list-tile-title>
-                </v-list-tile>
-            </v-list>
+            <v-toolbar>
+                <v-btn icon @click.stop="rightDrawer=false">
+                    <v-icon>arrow_back</v-icon>
+                </v-btn>
+                <v-toolbar-title> Settings</v-toolbar-title>
+            </v-toolbar>
+            <div class="px-2">
+                <v-text-field v-model="firstPlayerName" label="Player 1 Name" class="mt-3"></v-text-field>
+                <v-text-field v-model="secondPlayerName" label="Player 2 Name"></v-text-field>
+                <v-checkbox v-model="ai" label="Enable AI"></v-checkbox>
+            </div>
         </v-navigation-drawer>
     </v-app>
 </template>
 <script>
 export default {
     data() {
-        this.$toolbar.onchange(cur => {
-            this.toolbar = cur
-        })
-        return {
-            drawer: false,
-            rightDrawer: false,
-            toolbar: this.$toolbar.active,
-            items: [{
-                icon: 'apps',
-                title: 'Game',
-                to: '/'
-            }, {
-                icon: 'toc',
-                title: 'Rules',
-                to: '/rules'
-            }],
-            title: 'Onswee'
+            this.$toolbar.onchange(cur => {
+                this.toolbar = cur
+            })
+            return {
+                firstPlayerName: this.$store.state.firstPlayer.name,
+                secondPlayerName: this.$store.state.secondPlayer.name,
+                ai: this.$store.state.ai,
+                drawer: false,
+                rightDrawer: false,
+                toolbar: this.$toolbar.active,
+                items: [{
+                    icon: 'apps',
+                    title: 'Game',
+                    to: '/'
+                }, {
+                    icon: 'toc',
+                    title: 'Rules',
+                    to: '/rules'
+                }],
+                title: 'Onswee'
+            }
+        },
+        watch: {
+            firstPlayerName(newVal, oldVal) {
+                this.updatePlayerName(1, newVal)
+            },
+            secondPlayerName(newVal, oldVal) {
+                this.updatePlayerName(2, newVal)
+            },
+            ai(newVal, oldVal) {
+                this.$store.commit('setAI', newVal)
+            }
+        },
+        methods: {
+            updatePlayerName(whichPlayer, newName) {
+                this.$store.dispatch('updateName', {
+                    which: whichPlayer,
+                    name: newName
+                })
+            }
         }
-    }
 }
 </script>
