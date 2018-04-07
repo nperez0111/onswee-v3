@@ -96,8 +96,8 @@ const flips = {
         ],
         //corresponding to previos pairArrangements var these are the positions to check to see if it can make a line through center
 
-        prefferedLocs: [0, 2, 6, 8, 3, 1, 7, 5],
-        //preffered locations for placing into board 4 is checked seperately
+        prefferedLocs: [4, 0, 2, 6, 8, 3, 1, 7, 5],
+        //preffered locations for placing into board
 
         trapArrangements: [
             [

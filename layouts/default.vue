@@ -71,6 +71,7 @@ export default {
                 this.updatePlayerName(2, newVal)
             },
             ai(newVal, oldVal) {
+                console.log(newVal,this.$store)
                 this.$store.commit('setAI', newVal)
             }
         },

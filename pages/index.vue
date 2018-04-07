@@ -31,10 +31,6 @@ import Board from '../components/Board';
 import Logic from '../src/Game/Logic';
 import AI from '../src/ML/AI';
 export default {
-    mounted() {
-            const ai = new AI({})
-            window.ai = ai
-        },
         data() {
             return {}
         },
