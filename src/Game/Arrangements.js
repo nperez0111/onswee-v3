@@ -1,6 +1,5 @@
 import Logger from './Logger.js';
 import Constants from './Constants.js';
-console.log(Constants)
 const flips = {
         rotateBoardRight: [6, 2, -2, 4, 0, -4, 2, -2, -6],
         rotateBoardLeft: [2, 4, 6, -2, 0, 2, -6, -4, -2],

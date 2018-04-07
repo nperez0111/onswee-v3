@@ -29,8 +29,12 @@
 import FullHeight from '../components/Full-Height';
 import Board from '../components/Board';
 import Logic from '../src/Game/Logic';
+import AI from '../src/ML/AI';
 export default {
-    mounted() {},
+    mounted() {
+            const ai = new AI({})
+            window.ai = ai
+        },
         data() {
             return {}
         },

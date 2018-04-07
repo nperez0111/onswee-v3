@@ -126,7 +126,7 @@ const winningArrangements = [
         return prev
     }, {}),
     getAllOtherPossibilities = positions => subset(new Array(9).fill(false).filter((c, index) => !positions.includes(index)), 3),
-    toTrainWith = (winning, losing) => [{ input: Object.assign({}, winning('player1'), losing('player2')), output: { player1Win: 1 } }, { input: Object.assign({}, winning('player2'), losing('player1')), output: { player1Lose: 1 } }]
+    toTrainWith = (winning, losing) => [{ input: Object.assign({}, winning('firstPlayer'), losing('secondPlayer')), output: { firstPlayerWin: 1 } }, { input: Object.assign({}, winning('secondPlayer'), losing('firstPlayer')), output: { firstPlayerLose: 1 } }]
 
 function subset(arra, arra_size) {
     var result_set = [],
@@ -167,5 +167,5 @@ const traps = trapArrangements.map(([losingArrangement, winningArrangement]) => 
 
 net.train(data.concat(traps))
 
-var output = net.run(Object.assign({}, mapPlayerPositionsToObj([0, 2, 4], 'player2'), mapPlayerPositionsToObj([1, 3, 5], 'player1')));
-console.log(net.toJSON())
+var output = net.run(Object.assign({}, mapPlayerPositionsToObj([0, 2, 4], 'secondPlayer'), mapPlayerPositionsToObj([1, 3, 5], 'firstPlayer')));
+console.log(JSON.stringify(net.toJSON()))
