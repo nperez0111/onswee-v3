@@ -3,17 +3,26 @@ import json from './net.json'
 import brain from 'brain.js'
 import Logic from '../Game/Logic'
 const mapPlayerPositionsToObj = (positions, player) => new Array(9).fill(false).map((c, i) => positions.includes(i) ? 1 : 0).reduce((prev, cur, i) => {
-    prev[player + i] = cur
-    return prev
-}, {})
+        prev[player + i] = cur
+        return prev
+    }, {}),
+    net = new brain.NeuralNetwork()
+net.fromJSON(json)
 
 class Node extends Logic {
-    constructor({ board, turn, net }) {
+    constructor({ board, turn, net, parent }) {
         super()
         this.board = board
         this.turn = turn
         this.net = net
         this.rank = this.getRanking()
+        this.parent = parent
+    }
+    setParent(parentNode) {
+        this.parent = parentNode
+    }
+    hasParent() {
+        return this.parent !== undefined
     }
     isExtraRulesRound() {
         return Logic.isExtraRulesRound(this.turn)
@@ -26,9 +35,10 @@ class Node extends Logic {
             }).map(to => {
                 return new Node({ board: Logic.hypotheticalMoveInFromTo(this.player, this.board, fro, to), turn: this.turn + 1, net: this.net })
             })
-        })
+        }).filter(a => a.length)
     }
     getPositions(currentPlayer = true) {
+        console.log(this.turn, this.player)
         return Logic.getPlayersPositions(currentPlayer ? this.player : Logic.getOtherPlayer(this.player), this.board)
     }
     getOtherPositions() {
@@ -60,39 +70,67 @@ class Node extends Logic {
     }
 }
 class Minimax {
-    constructor() {
-
+    static findBestMove(obj) {
+        const bestNode = Minimax.MiniMax(obj),
+            newBoard = bestNode.board
+        return newBoard
     }
-    static findBestMove({ root, depth = 3, height = 1, isMax = true }) {
+    static MiniMax({ rootNode, depth = 3, height = 1, isMax = true }) {
         if (depth === height) {
-            return root
+            return rootNode
         }
-        if (isMax) {
+        console.log(rootNode)
+        const children = rootNode.getPossiblesOf()
+        rootNode.print()
+        console.log(children)
+        const toLocalMaxOrMin = (localMaxOrMin, result) => {
+            const maxOrMin = isMax ? Math.max : Math.min
+            if (maxOrMin(localMaxOrMin.rank, result.rank)) {
+                return result
+            }
+            return localMaxOrMin
+        }
 
-        } else {
-            root.getPossiblesOf()
-        }
+        const result = children.map(possibles => {
+            const results = possibles.map(child => {
+                child.setParent(rootNode)
+                const move = Minimax.MiniMax({ rootNode: child, depth, height: height + 1, isMax: !isMax })
+                console.log("MOVE:", move)
+                move.print()
+                return move
+            })
+
+            console.log(isMax ? "MAXING" : "MINING")
+            console.log(results, possibles)
+            const localMaxOrMin = results.reduce(toLocalMaxOrMin)
+
+            console.log("RESULTS:", results)
+            console.log("Result:", localMaxOrMin)
+            return localMaxOrMin.hasParent() ? localMaxOrMin.parent === rootNode ? localMaxOrMin : localMaxOrMin.parent : localMaxOrMin
+        }).reduce(toLocalMaxOrMin)
+        console.log("Final:", result.rank)
+        result.print()
+        return result
 
     }
 }
 
-export default class AI extends Logic {
-    constructor(options) {
-        super()
-        this.net = new brain.NeuralNetwork()
-        this.net.fromJSON(json)
-        console.log(this.net.run(Object.assign({}, mapPlayerPositionsToObj([0, 2, 4], 'secondPlayer'), mapPlayerPositionsToObj([1, 3, 5], 'firstPlayer'))))
+class AI extends Logic {
+    /* constructor(options) {
+         super()
 
-        let n = new Node({ board: [null, 1, 2, 1, 2, 1, null, 2, null], turn: 7, net: this.net })
-        Logic.trackcurrent(n.board)
-        console.log('rw')
-        n.getPossiblesOf().forEach(arr => {
-            console.log(arr)
-            arr.forEach(board => {
-                board.print()
-            })
-        })
-    }
+         console.log(this.net.run(Object.assign({}, mapPlayerPositionsToObj([0, 2, 4], 'secondPlayer'), mapPlayerPositionsToObj([1, 3, 5], 'firstPlayer'))))
+
+         let n = new Node({ board: [null, 1, 2, 1, 2, 1, null, 2, null], turn: 7, net: this.net })
+         Logic.trackcurrent(n.board)
+         console.log('rw')
+         n.getPossiblesOf().forEach(arr => {
+             console.log(arr)
+             arr.forEach(board => {
+                 board.print()
+             })
+         })
+     }*/
     static justMoveAnywhere(player, board) {
         const positions = Logic.getPlayersPositions(player, board)
 
@@ -135,7 +173,7 @@ export default class AI extends Logic {
 
     static isAbleToWin(player, board, retToBeBool = true, useOtherPlayer = false) {
 
-        const indexes = Logic.hasPossibleLineIn(useOtherPlayer ? Logic.getOtherPlayer(player) : player, board, false)
+        const indexes = AI.hasPossibleLineIn(useOtherPlayer ? Logic.getOtherPlayer(player) : player, board, false)
         const hasFinalPieceToMoveIn = i => Logic.hasPosIn(player, Logic.pairCompleter[i][0], board) || Logic.hasPosIn(player, Logic.pairCompleter[i][1], board)
         const checkPairCompleter = index => Logic.isEmptyPos(Logic.pairCompleting[index], board)
         const resp = (fro, i) => [fro, Logic.pairCompleting[i]]
@@ -160,7 +198,7 @@ export default class AI extends Logic {
 
     }
     static addToBoard(player, board) {
-        return AI.returnResponse(Logic.prefferedLocs, position => Logic.isEmptyPos(position, board) && [null, position])
+        return AI.returnResponse(Logic.prefferedLocs, position => Logic.isEmptyPos(position, board) && Logic.canPlaceInto(player, position, board) && [null, position])
     }
     static takeTheWin(player, board) {
         return AI.isAbleToWin(player, board, false)
@@ -196,19 +234,19 @@ export default class AI extends Logic {
             }
         ]
 
-        return AI.returnResponse(options, option => {
-            console.log(option)
-            return option.is(player, board, turn) && option.then(player, board)
-        }, [null, null])
+        return AI.returnResponse(options, option => option.is(player, board, turn) && option.then(player, board, turn), [null, null])
     }
     static pickBestMove(player, board, turn) {
 
         //this.mini.setState(player, board)
 
-        const boardPicked = null
+        let boardPicked = null
+        boardPicked = Minimax.findBestMove({ rootNode: new Node({ board, turn, net }) })
         if (boardPicked === null) {
             return [false, false]
         }
         return Logic.changeBetween(board, boardPicked)
     }
 }
+Object.defineProperty(AI, 'net', net)
+export default AI

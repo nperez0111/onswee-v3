@@ -89,6 +89,10 @@ export const actions = {
             board = state.game.board,
             [fro, to] = AI.decideMoveToTake(getters.getPlayer, board, turn)
         console.log(fro, to)
+        if (fro === false && to === false) {
+            commit('setAI', 'error')
+            return
+        }
         if (Logic.isPlacingRound(turn)) {
             dispatch('add', { index: to, aiTurn: true })
         } else if (Logic.isExtraRulesRound(turn)) {

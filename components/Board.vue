@@ -80,7 +80,7 @@ export default {
                 if (this.isPlacingRound && Logic.canPlaceInto(this.player, index, this.board)) {
                     this.$store.dispatch('add', {index})
                 } else {
-                    if (Logic.getPlayersPositions(this.player, this.board).some(pos => pos === index)) {
+                    if (Logic.getPlayersPositions(this.player, this.board).some(pos => pos === index) && !this.isPlacingRound) {
                         this.selected = index
                     } else if (this.selected === index) {
                         this.selected = null
