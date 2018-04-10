@@ -1,6 +1,8 @@
 import Logic from '../src/Game/Logic'
 import AI from '../src/ML/AI';
 const ai = new AI(),
+    delay = time => new Promise((resolve) => setTimeout(resolve, time)),
+    AI_DELAY = () => delay(900),
     getPlayer = which => which === Logic.Constants.player1 ? 'firstPlayer' : which === Logic.Constants.player2 ? 'secondPlayer' : (new Error("Wrong number to get player with"));
 export const state = () => ({
     firstPlayer: {
@@ -58,7 +60,7 @@ export const actions = {
         commit('addToBoard', index)
         commit('incrementTurn')
         if (state.ai && !aiTurn) {
-            dispatch('aiTurn')
+            AI_DELAY().then(() => dispatch('aiTurn'))
         }
     },
     moveFromTo({ commit, getters, state, dispatch }, payload) {
@@ -66,25 +68,27 @@ export const actions = {
         if (Logic.isWinIn(getters.getPlayer, state.game.board)) {
             commit('addWin', getters.getPlayer)
             dispatch('reset')
+            return
         } else {
             commit('incrementTurn')
         }
 
         if (state.ai && !payload.aiTurn) {
-            dispatch('aiTurn')
+            AI_DELAY().then(() => dispatch('aiTurn'))
         }
     },
     moveFromToWithRules({ commit, state, dispatch }, payload) {
         commit('moveFromToWithRules', payload)
         commit('incrementTurn')
         if (state.ai && !payload.aiTurn) {
-            dispatch('aiTurn')
+            AI_DELAY().then(() => dispatch('aiTurn'))
         }
     },
     reset({ commit }) {
         commit('setGame', Logic.getInitialState())
     },
     aiTurn({ commit, state, dispatch, getters }) {
+        console.group("AI Turn:")
         const turn = state.game.turn,
             board = state.game.board,
             [fro, to] = AI.decideMoveToTake(getters.getPlayer, board, turn)
@@ -100,5 +104,6 @@ export const actions = {
         } else {
             dispatch('moveFromTo', { from: fro, to: to, aiTurn: true })
         }
+        console.groupEnd("AI Turn:")
     }
 }

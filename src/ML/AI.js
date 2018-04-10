@@ -27,13 +27,13 @@ class Node extends Logic {
     isExtraRulesRound() {
         return Logic.isExtraRulesRound(this.turn)
     }
-    getPossiblesOf() {
+    getPossiblesOf(parentNode) {
         return Logic.getPlayersPositions(this.player, this.board).map(fro => {
             return Logic.allPosMoveLocs[fro].filter(to => {
                 const canMove = this.isExtraRulesRound ? Logic.canMoveFromToWithRules : Logic.canMoveFromTo
                 return canMove(this.player, this.board, fro, to);
             }).map(to => {
-                return new Node({ board: Logic.hypotheticalMoveInFromTo(this.player, this.board, fro, to), turn: this.turn + 1, net: this.net })
+                return new Node({ board: Logic.hypotheticalMoveInFromTo(this.player, this.board, fro, to), turn: this.turn + 1, net: this.net, parent: parentNode })
             })
         }).filter(a => a.length)
     }
@@ -79,10 +79,8 @@ class Minimax {
         if (depth === height) {
             return rootNode
         }
-        console.log(rootNode)
-        const children = rootNode.getPossiblesOf()
-        rootNode.print()
-        console.log(children)
+        const children = rootNode.getPossiblesOf(rootNode)
+
         const toLocalMaxOrMin = (localMaxOrMin, result) => {
             const maxOrMin = isMax ? Math.max : Math.min
             if (maxOrMin(localMaxOrMin.rank, result.rank)) {
@@ -93,44 +91,22 @@ class Minimax {
 
         const result = children.map(possibles => {
             const results = possibles.map(child => {
-                child.setParent(rootNode)
                 const move = Minimax.MiniMax({ rootNode: child, depth, height: height + 1, isMax: !isMax })
-                console.log("MOVE:", move)
-                move.print()
+                //console.log("MOVE:", move)
+                //move.print()
                 return move
             })
-
-            console.log(isMax ? "MAXING" : "MINING")
-            console.log(results, possibles)
             const localMaxOrMin = results.reduce(toLocalMaxOrMin)
-
-            console.log("RESULTS:", results)
-            console.log("Result:", localMaxOrMin)
             return localMaxOrMin.hasParent() ? localMaxOrMin.parent === rootNode ? localMaxOrMin : localMaxOrMin.parent : localMaxOrMin
         }).reduce(toLocalMaxOrMin)
-        console.log("Final:", result.rank)
-        result.print()
+        //console.log("Final:", result.rank)
+        //result.print()
         return result
 
     }
 }
 
 class AI extends Logic {
-    /* constructor(options) {
-         super()
-
-         console.log(this.net.run(Object.assign({}, mapPlayerPositionsToObj([0, 2, 4], 'secondPlayer'), mapPlayerPositionsToObj([1, 3, 5], 'firstPlayer'))))
-
-         let n = new Node({ board: [null, 1, 2, 1, 2, 1, null, 2, null], turn: 7, net: this.net })
-         Logic.trackcurrent(n.board)
-         console.log('rw')
-         n.getPossiblesOf().forEach(arr => {
-             console.log(arr)
-             arr.forEach(board => {
-                 board.print()
-             })
-         })
-     }*/
     static justMoveAnywhere(player, board) {
         const positions = Logic.getPlayersPositions(player, board)
 
@@ -222,7 +198,7 @@ class AI extends Logic {
                 then: AI.takeTheWin
             }, {
                 is: (player, board) => AI.isAbleToBlock(player, board),
-                then: AI.blockOtherPlayer
+                then: AI.blockTheOtherPlayer
             },
             {
                 is: (player, board) => turn > Logic.Constants.extraRulesRound,
