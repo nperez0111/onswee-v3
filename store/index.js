@@ -60,7 +60,7 @@ export const actions = {
         commit('addToBoard', index)
         commit('incrementTurn')
         if (state.ai && !aiTurn) {
-            AI_DELAY().then(() => dispatch('aiTurn'))
+            dispatch('aiTurn')
         }
     },
     moveFromTo({ commit, getters, state, dispatch }, payload) {
@@ -74,36 +74,40 @@ export const actions = {
         }
 
         if (state.ai && !payload.aiTurn) {
-            AI_DELAY().then(() => dispatch('aiTurn'))
+            dispatch('aiTurn')
         }
     },
     moveFromToWithRules({ commit, state, dispatch }, payload) {
         commit('moveFromToWithRules', payload)
         commit('incrementTurn')
         if (state.ai && !payload.aiTurn) {
-            AI_DELAY().then(() => dispatch('aiTurn'))
+            dispatch('aiTurn')
         }
     },
     reset({ commit }) {
         commit('setGame', Logic.getInitialState())
     },
     aiTurn({ commit, state, dispatch, getters }) {
-        console.group("AI Turn:")
-        const turn = state.game.turn,
-            board = state.game.board,
-            [fro, to] = AI.decideMoveToTake(getters.getPlayer, board, turn)
-        console.log(fro, to)
-        if (fro === false && to === false) {
-            commit('setAI', 'error')
-            return
-        }
-        if (Logic.isPlacingRound(turn)) {
-            dispatch('add', { index: to, aiTurn: true })
-        } else if (Logic.isExtraRulesRound(turn)) {
-            dispatch('moveFromToWithRules', { from: fro, to: to, aiTurn: true })
-        } else {
-            dispatch('moveFromTo', { from: fro, to: to, aiTurn: true })
-        }
-        console.groupEnd("AI Turn:")
+        return new Promise((resolve, reject) => {
+            console.group("AI Turn:")
+            const turn = state.game.turn,
+                board = state.game.board,
+                [fro, to] = AI.decideMoveToTake(getters.getPlayer, board, turn)
+            console.log("From:", fro, "To:", to)
+            if (fro === false && to === false) {
+                AI_DELAY().then(() => commit('setAI', 'error')).then(reject)
+                console.groupEnd("AI Turn:")
+                return
+            }
+            if (Logic.isPlacingRound(turn)) {
+                AI_DELAY().then(() => dispatch('add', { index: to, aiTurn: true })).then(resolve)
+            } else if (Logic.isExtraRulesRound(turn)) {
+                AI_DELAY().then(() => dispatch('moveFromToWithRules', { from: fro, to: to, aiTurn: true })).then(resolve)
+            } else {
+                AI_DELAY().then(() => dispatch('moveFromTo', { from: fro, to: to, aiTurn: true })).then(resolve)
+            }
+            console.groupEnd("AI Turn:")
+        })
+
     }
 }
