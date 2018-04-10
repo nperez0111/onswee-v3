@@ -47,7 +47,7 @@ export default {
             return {
                 firstPlayerName: this.$store.state.firstPlayer.name,
                 secondPlayerName: this.$store.state.secondPlayer.name,
-                ai: this.$store.state.ai,
+                ai: this.$store.state.ai.state == 'active',
                 drawer: false,
                 rightDrawer: false,
                 toolbar: this.$toolbar.active,
@@ -71,8 +71,7 @@ export default {
                 this.updatePlayerName(2, newVal)
             },
             ai(newVal, oldVal) {
-                console.log(newVal,this.$store)
-                this.$store.commit('setAI', newVal)
+                this.$store.dispatch('setAIState', newVal ? 'active' : 'disabled')
             }
         },
         methods: {

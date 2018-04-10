@@ -14,7 +14,10 @@ export const state = () => ({
         wins: 0
     },
     game: Logic.getInitialState(),
-    ai: true
+    ai: {
+        state: 'active',
+        animating: false
+    }
 })
 
 export const mutations = {
@@ -39,14 +42,24 @@ export const mutations = {
     incrementTurn(state) {
         state.game.turn++
     },
-    setAI(state, to) {
-        state.ai = to
+    setAI(state, key, value) {
+        if (value === undefined) {
+            value = key
+            key = 'state'
+        }
+        state.ai = { ...state.ai, [key]: value }
     }
 }
 
 export const getters = {
     getPlayer(state) {
         return Logic.isPlayersTurn(Logic.Constants.player1, state.game.turn) ? Logic.Constants.player1 : Logic.Constants.player2
+    },
+    isActiveAI(state) {
+        return state.ai.state === 'active'
+    },
+    gameStarted(state) {
+        return state.turns > 2
     }
 }
 export const actions = {
@@ -56,10 +69,10 @@ export const actions = {
     updateWin({ commit }, { which }) {
         commit('addWin', which)
     },
-    add({ commit, state, dispatch }, { index, aiTurn }) {
+    add({ commit, state, dispatch, getters }, { index, aiTurn }) {
         commit('addToBoard', index)
         commit('incrementTurn')
-        if (state.ai && !aiTurn) {
+        if (getters.isActiveAI && !aiTurn) {
             AI_DELAY().then(() => dispatch('aiTurn'))
         }
     },
@@ -73,14 +86,14 @@ export const actions = {
             commit('incrementTurn')
         }
 
-        if (state.ai && !payload.aiTurn) {
+        if (getters.isActiveAI && !payload.aiTurn) {
             AI_DELAY().then(() => dispatch('aiTurn'))
         }
     },
-    moveFromToWithRules({ commit, state, dispatch }, payload) {
+    moveFromToWithRules({ commit, state, dispatch, getters }, payload) {
         commit('moveFromToWithRules', payload)
         commit('incrementTurn')
-        if (state.ai && !payload.aiTurn) {
+        if (getters.isActiveAI && !payload.aiTurn) {
             AI_DELAY().then(() => dispatch('aiTurn'))
         }
     },
@@ -105,5 +118,16 @@ export const actions = {
             dispatch('moveFromTo', { from: fro, to: to, aiTurn: true })
         }
         console.groupEnd("AI Turn:")
+    },
+    setAIState({ commit, state, dispatch, getters }, currentState) {
+        commit('setAI', currentState)
+        if (currentState === 'error') {
+            commit('addWin', getters.getPlayer)
+            dispatch('reset')
+            return
+        }
+        if (getters.gameStarted) {
+            dispatch('reset')
+        }
     }
 }
