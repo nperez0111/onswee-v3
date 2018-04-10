@@ -71,7 +71,7 @@ export default {
                 this.updatePlayerName(2, newVal)
             },
             ai(newVal, oldVal) {
-                this.$store.dispatch('setAIState', newVal ? 'active' : 'disabled')
+                this.$store.dispatch('setAIState', newVal)
             }
         },
         methods: {

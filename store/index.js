@@ -2,7 +2,6 @@ import Logic from '../src/Game/Logic'
 import AI from '../src/ML/AI';
 const ai = new AI(),
     delay = time => new Promise((resolve) => setTimeout(resolve, time)),
-    AI_DELAY = () => delay(900),
     getPlayer = which => which === Logic.Constants.player1 ? 'firstPlayer' : which === Logic.Constants.player2 ? 'secondPlayer' : (new Error("Wrong number to get player with"));
 export const state = () => ({
     firstPlayer: {
@@ -42,10 +41,10 @@ export const mutations = {
     incrementTurn(state) {
         state.game.turn++
     },
-    setAI(state, key, value) {
+    setAI(state, obj) {
+        let { key = 'state', value } = obj
         if (value === undefined) {
-            value = key
-            key = 'state'
+            value = obj
         }
         state.ai = { ...state.ai, [key]: value }
     }
@@ -101,6 +100,7 @@ export const actions = {
         commit('setGame', Logic.getInitialState())
     },
     aiTurn({ commit, state, dispatch, getters }) {
+        const AI_DELAY = (fro, to) => Promise.resolve(commit('setAI', { key: 'animating', value: [fro, to] })).then(() => delay(900))
         return new Promise((resolve, reject) => {
             console.group("AI Turn:")
             const turn = state.game.turn,
@@ -109,21 +109,20 @@ export const actions = {
             console.log("From:", fro, "To:", to)
             if (fro === false && to === false) {
                 AI_DELAY().then(() => commit('setAI', 'error')).then(reject)
-                console.groupEnd("AI Turn:")
-                return
-            }
-            if (Logic.isPlacingRound(turn)) {
-                AI_DELAY().then(() => dispatch('add', { index: to, aiTurn: true })).then(resolve)
-            } else if (Logic.isExtraRulesRound(turn)) {
-                AI_DELAY().then(() => dispatch('moveFromToWithRules', { from: fro, to: to, aiTurn: true })).then(resolve)
             } else {
-                AI_DELAY().then(() => dispatch('moveFromTo', { from: fro, to: to, aiTurn: true })).then(resolve)
+                if (Logic.isPlacingRound(turn)) {
+                    AI_DELAY(fro, to).then(() => dispatch('add', { index: to, aiTurn: true })).then(resolve)
+                } else if (Logic.isExtraRulesRound(turn)) {
+                    AI_DELAY(fro, to).then(() => dispatch('moveFromToWithRules', { from: fro, to: to, aiTurn: true })).then(resolve)
+                } else {
+                    AI_DELAY(fro, to).then(() => dispatch('moveFromTo', { from: fro, to: to, aiTurn: true })).then(resolve)
+                }
             }
             console.groupEnd("AI Turn:")
         })
     },
     setAIState({ commit, state, dispatch, getters }, currentState) {
-        commit('setAI', currentState)
+        commit('setAI', currentState === true ? 'active' : currentState === false ? 'disabled' : currentState)
         if (currentState === 'error') {
             commit('addWin', getters.getPlayer)
             dispatch('reset')

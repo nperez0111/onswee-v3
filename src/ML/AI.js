@@ -38,7 +38,6 @@ class Node extends Logic {
         }).filter(a => a.length)
     }
     getPositions(currentPlayer = true) {
-        console.log(this.turn, this.player)
         return Logic.getPlayersPositions(currentPlayer ? this.player : Logic.getOtherPlayer(this.player), this.board)
     }
     getOtherPositions() {
