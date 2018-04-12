@@ -24,13 +24,17 @@ class Node extends Logic {
     hasParent() {
         return this.parent !== undefined
     }
+    isPlacingRound() {
+        return Logic.isPlacingRound(this.turn)
+    }
     isExtraRulesRound() {
         return Logic.isExtraRulesRound(this.turn)
     }
     getPossiblesOf(parentNode) {
-        return Logic.getPlayersPositions(this.player, this.board).map(fro => {
+        const positionsToChooseFrom = this.isPlacingRound() ? this.board.reduce((arr, cur, i) => cur == null ? arr.push(i) && arr : arr, []) : Logic.getPlayersPositions(this.player, this.board)
+        return positionsToChooseFrom.map(fro => {
             return Logic.allPosMoveLocs[fro].filter(to => {
-                const canMove = this.isExtraRulesRound ? Logic.canMoveFromToWithRules : Logic.canMoveFromTo
+                const canMove = this.isPlacingRound() ? ((player, board, fro, to) => Logic.canPlaceInto(player, to, board)) : (this.isExtraRulesRound() ? Logic.canMoveFromToWithRules : Logic.canMoveFromTo)
                 return canMove(this.player, this.board, fro, to);
             }).map(to => {
                 return new Node({ board: Logic.hypotheticalMoveInFromTo(this.player, this.board, fro, to), turn: this.turn + 1, net: this.net, parent: parentNode })
@@ -70,8 +74,13 @@ class Node extends Logic {
 }
 class Minimax {
     static findBestMove(obj) {
+        obj.depth = obj.rootNode.isPlacingRound ? 3 : 5
+        Logic.log("From:")
+        Logic.trackcurrent(obj.rootNode.board)
         const bestNode = Minimax.MiniMax(obj),
             newBoard = bestNode.board
+        Logic.log("To:")
+        Logic.trackcurrent(newBoard)
         return newBoard
     }
     static MiniMax({ rootNode, depth = 3, height = 1, isMax = true }) {
@@ -96,6 +105,7 @@ class Minimax {
                 return move
             })
             const localMaxOrMin = results.reduce(toLocalMaxOrMin)
+
             return localMaxOrMin.hasParent() ? localMaxOrMin.parent === rootNode ? localMaxOrMin : localMaxOrMin.parent : localMaxOrMin
         }).reduce(toLocalMaxOrMin)
         //console.log("Final:", result.rank)
@@ -188,7 +198,7 @@ class AI extends Logic {
     static decideMoveToTake(player, board, turn) {
         const options = [{
                 is: (player, board, turn) => Logic.isPlacingRound(turn),
-                then: AI.addToBoard
+                then: AI.pickBestMove
             }, {
                 is: (player, board, turn) => Logic.isExtraRulesRound(turn),
                 then: AI.pickBestMove
