@@ -134,5 +134,5 @@ const traps = trapArrangements.map(([losingArrangement, winningArrangement]) => 
 
 net.train(data.concat(traps))
 
-var output = net.run(Object.assign({}, mapPlayerPositionsToObj([0, 2, 4], 'secondPlayer'), mapPlayerPositionsToObj([1, 3, 5], 'firstPlayer')));
-console.log(JSON.stringify(net.toJSON()))
+var output = net.run(Object.assign({}, mapPlayerPositionsToObj([0, 3, 8], 'secondPlayer'), mapPlayerPositionsToObj([1, 4, 6], 'firstPlayer')));
+console.log(output)

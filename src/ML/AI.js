@@ -189,7 +189,7 @@ class AI extends Logic {
         return AI.isAbleToWin(player, board, false)
     }
     static isAbleToBlock(player, board, retToBeBool = true) {
-        const posToBlock = AI.isAbleToWin((player), board, false, true)
+        const posToBlock = AI.isAbleToWin(Logic.getOtherPlayer(player), board, false, true)
         return retToBeBool ? posToBlock !== false : posToBlock
     }
     static blockTheOtherPlayer(player, board) {
